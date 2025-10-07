@@ -6,9 +6,10 @@ from assistant.llm.ollama_client import OllamaClient
 from assistant.memory.store import mem
 from assistant.schema import AskReq, AskRes, MemoryList, MemoryItem, Health
 from assistant.ingest.file_ingestor import ingest_file
+from assistant.ocr.donut_parser import extract_answers_from_image_bytes  # ✅ NEW
 
 # ---- FastAPI app ----
-app = FastAPI(title="Private Health LLM", version="0.2.0")
+app = FastAPI(title="Private Health LLM", version="0.3.0")
 
 # Basic CORS so you can call this from a local web app later
 app.add_middleware(
@@ -28,10 +29,16 @@ SYSTEM_PROMPT = (
     "and encourage users to consult their clinician for personal medical advice."
 )
 
+# -----------------------------------------
+# System health endpoint
+# -----------------------------------------
 @app.get("/health", response_model=Health, tags=["System"])
 def health() -> Health:
     return Health(status="ok")
 
+# -----------------------------------------
+# Ask LLM endpoint
+# -----------------------------------------
 @app.post("/ask", response_model=AskRes, tags=["Ask"])
 def ask(req: AskReq) -> AskRes:
     user_id = req.user_id or "demo"
@@ -54,6 +61,9 @@ def ask(req: AskReq) -> AskRes:
 
     return AskRes(answer=answer)
 
+# -----------------------------------------
+# Memory endpoints
+# -----------------------------------------
 @app.get("/memory/{user_id}", response_model=MemoryList, tags=["Memory"])
 def get_memory(user_id: str, limit: int = 20) -> MemoryList:
     items = [MemoryItem(**m) for m in mem.get(user_id, limit=limit)]
@@ -64,6 +74,9 @@ def clear_memory(user_id: str):
     mem._store[user_id].clear()  # type: ignore[attr-defined]
     return {"status": "cleared", "user_id": user_id}
 
+# -----------------------------------------
+# File ingestion (PDF/Image OCR + Summary)
+# -----------------------------------------
 @app.post("/ingest", tags=["Ingest"])
 async def ingest_file_api(
     file: UploadFile = File(...),
@@ -115,4 +128,32 @@ async def ingest_file_api(
         "extracted_text": extracted_text,
         "summary": summary,
         "alert": alert_triggered
+    }
+
+# -----------------------------------------
+# NEW: Structured lab report parsing (Donut)
+# -----------------------------------------
+@app.post("/parse-lab-report", tags=["OCR"])
+async def parse_lab_report(
+    file: UploadFile = File(...),
+    user_id: str = Query(default="demo")
+):
+    """
+    Upload a lab report image (JPG/PNG), extract structured info using Donut model.
+    """
+    filename = file.filename.lower()
+    if not filename.endswith((".jpg", ".jpeg", ".png")):
+        raise HTTPException(status_code=400, detail="Only .jpg/.jpeg/.png files are supported.")
+
+    try:
+        image_bytes = await file.read()
+        parsed = extract_answers_from_image_bytes(image_bytes)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Parsing failed: {e!r}")
+
+    return {
+        "status": "success",
+        "user_id": user_id,
+        "filename": file.filename,
+        "parsed_answers": parsed
     }
