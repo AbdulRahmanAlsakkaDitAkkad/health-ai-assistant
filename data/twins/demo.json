@@ -1,0 +1,41 @@
+{
+  "user_id": "demo",
+  "notes": [
+    {
+      "timestamp": "2025-10-12T20:00:21.471803",
+      "text": "I felt tired and had a mild fever yesterday."
+    },
+    {
+      "timestamp": "2025-10-12T21:19:54.919350",
+      "text": "I had chest pain today."
+    }
+  ],
+  "health_history": [
+    {
+      "condition": "Asthma",
+      "diagnosis_date": null,
+      "status": "active",
+      "notes": "Mild condition, managed with inhaler."
+    },
+    {
+      "condition": "Hypertension",
+      "diagnosis_date": "2022-05-01",
+      "status": "active",
+      "notes": "On daily medication"
+    }
+  ],
+  "surgeries": [],
+  "family_history": [
+    {
+      "relation": "father",
+      "condition": "Diabetes",
+      "notes": "Diagnosed at age 50"
+    },
+    {
+      "relation": "mother",
+      "condition": "Hypertension",
+      "notes": "Diagnosed at age 60"
+    }
+  ],
+  "ingested_texts": []
+}

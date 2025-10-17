@@ -11,11 +11,18 @@ from assistant.memory.store import mem
 from assistant.schema import AskReq, AskRes, MemoryList, MemoryItem, Health
 from assistant.ingest.file_ingestor import ingest_file
 # --- NEW/UPDATED IMPORTS ---
-from assistant.ocr.donut_parser import extract_answers_from_image_bytes 
-from assistant.ingest.document_router import classify_document, get_question_set 
+from assistant.ocr.donut_parser import extract_answers_from_image_bytes
+from assistant.ingest.document_router import classify_document, get_question_set
+
+# --- Digital Twin imports ---
+from pydantic import BaseModel
+from typing import List
+from assistant.memory.digital_twin import DigitalTwinManager
+from assistant.schema.dht_models import HealthHistoryItem, FamilyHistoryItem
+from assistant.llm.ollama_client import OllamaClient
 
 # ---- FastAPI app ----
-app = FastAPI(title="Private Health LLM", version="0.4.1 - Robust Routing") 
+app = FastAPI(title="Private Health LLM", version="0.4.1 - Robust Routing")
 
 # Basic CORS so you can call this from a local web app later
 app.add_middleware(
@@ -83,18 +90,11 @@ def clear_memory(user_id: str):
 # -------------------------------------------------------------
 # RESTORED ENDPOINT: General OCR & LLM Summarization (The Fallback)
 # -------------------------------------------------------------
-# This is the original /ingest logic, now used as a fallback path
 @app.post("/ingest", tags=["Ingest"])
 async def ingest_file_api(
     file: UploadFile = File(...),
     user_id: str = Query(default="demo")
 ):
-    """
-    Upload a PDF or image, extract its text via OCR, summarize it, store in memory, and return metadata and 
-    also Attempts specialized Donut extraction for structured data. 
-    FALLS BACK to general LLM summarization if structured extraction fails.
-    """
-
     file_bytes = await file.read()
     filename = file.filename.lower()
 
@@ -141,56 +141,46 @@ async def ingest_file_api(
     }
 
 # -------------------------------------------------------------
-# MASTER ENDPOINT: Dynamic Routing & Extraction 
+# MASTER ENDPOINT: Dynamic Routing & Extraction
 # -------------------------------------------------------------
 @app.post("/upload-document", tags=["Master Ingestion"])
 async def upload_document_master(
     file: UploadFile = File(...),
     user_id: str = Query(default="demo")
 ) -> Dict[str, Any]:
-    """
-    Intelligently processes any uploaded document: classifies, extracts structured data 
-    (via Donut), and provides a general LLM summary.
-    """
     file_bytes = await file.read()
     filename = file.filename.lower()
     file_type = "pdf" if filename.endswith(".pdf") else "image"
-    
+
     # 1. Initial OCR (Raw Text Extraction) for Classification Input
     try:
-        extracted_text = ingest_file(file_bytes, file_type) 
+        extracted_text = ingest_file(file_bytes, file_type)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Initial ingestion failed: {e!r}")
 
     # 2. Dynamic Routing (Classification)
     doc_type = classify_document(extracted_text)
-    
     structured_data = {}
-    
+
     # 3. Attempt Structured Extraction (only for images of specific types)
     if doc_type != "general_text" and file_type == "image":
         questions = get_question_set(doc_type)
         try:
             structured_data = extract_answers_from_image_bytes(file_bytes, questions)
         except Exception as e:
-            # If Donut fails (e.g., poor image quality, Index Error), proceed with LLM summary only
-            warnings.warn(f"Donut extraction failed for {doc_type}. Proceeding with LLM summary. Error: {e}")
-            
-    # 4. LLM Summarization and Memory Storage (The guaranteed step)
+            warnings.warn(f"Donut extraction failed for {doc_type}. Error: {e}")
+
+    # 4. LLM Summarization and Memory Storage
     try:
         summary = llm.chat([
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Summarize this document (classified as {doc_type}):\n\n{extracted_text}"}
         ])
-        
-        # 🧠 Store raw text and summary in memory for later /ask retrieval
         mem.add(user_id=user_id, role="user", content=f"[Uploaded {doc_type}] {extracted_text}")
         mem.add(user_id=user_id, role="assistant", content=summary)
-        
     except Exception:
         summary = "Summary generation failed."
 
-    # 5. Final Response
     return {
         "status": "success",
         "doc_type": doc_type,
@@ -199,58 +189,47 @@ async def upload_document_master(
     }
 
 # -------------------------------------------------------------
-# RESTORED ENDPOINT: Specialized Donut Endpoint (Now handles fallback if Donut fails)
+# RESTORED ENDPOINT: Specialized Donut Endpoint
 # -------------------------------------------------------------
 @app.post("/parse-lab-report", tags=["CV"])
 async def parse_lab_report(
     file: UploadFile = File(...),
     user_id: str = Query(default="demo")
 ):
-    """
-    Upload a lab report image (JPG/PNG), extract structured info using Donut model.
-    """
     file_bytes = await file.read()
     filename = file.filename.lower()
-    
-    if not filename.endswith((".jpg", ".jpeg", ".png")):
-        raise HTTPException(status_code=400, detail="Only images are supported for structured parsing.")
 
-    # 1. Classify the document type to get the right questions
+    if not filename.endswith((".jpg", ".jpeg", ".png")):
+        raise HTTPException(status_code=400, detail="Only images are supported.")
+
+    # 1. Classify the document type
     try:
-        # NOTE: We run OCR first just to get the text for classification
         extracted_text = ingest_file(file_bytes, file_type="image")
         doc_type = classify_document(extracted_text)
         questions = get_question_set(doc_type)
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Initial classification failed: {e!r}")
-    
+
     # 2. Attempt Structured Extraction
     parsed_answers = {}
-    
     if doc_type != "general_text":
         try:
             parsed_answers = extract_answers_from_image_bytes(file_bytes, questions)
         except Exception as e:
-            # 3. FALLBACK LOGIC: If Donut fails, run the LLM summarization instead
-            warnings.warn(f"Donut failed on /parse-lab-report. Falling back to LLM summary. Error: {e}")
-            
-            # --- FALLBACK: RUN LLM SUMMARY ---
+            warnings.warn(f"Donut failed. Falling back. Error: {e}")
             try:
                 summary = llm.chat([
                     {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": f"Summarize this document (classified as {doc_type}) after extraction failure:\n\n{extracted_text}"}
+                    {"role": "user", "content": f"Summarize this document (classified as {doc_type}):\n\n{extracted_text}"}
                 ])
                 return {
                     "status": "fallback_summary",
                     "doc_type": doc_type,
                     "summary": summary,
-                    "error_detail": f"Structured extraction failed. Summary provided."
                 }
             except Exception:
-                raise HTTPException(status_code=500, detail="Both structured and general LLM processing failed.")
+                raise HTTPException(status_code=500, detail="Both structured and summary failed.")
 
-    # 4. Success Response
     return {
         "status": "success",
         "user_id": user_id,
@@ -258,3 +237,55 @@ async def parse_lab_report(
         "filename": file.filename,
         "parsed_answers": parsed_answers,
     }
+
+# -------------------------------------------------------------
+# NEW ENDPOINTS: Digital Twin Expansion
+# -------------------------------------------------------------
+class UserNoteRequest(BaseModel):
+    user_id: str
+    text: str
+
+class HealthHistoryRequest(BaseModel):
+    user_id: str
+    items: List[HealthHistoryItem]
+
+class FamilyHistoryRequest(BaseModel):
+    user_id: str
+    items: List[FamilyHistoryItem]
+
+class FollowupRequest(BaseModel):
+    user_id: str
+    summary_or_text: str
+
+@app.post("/add-user-note", tags=["Digital Twin"])
+def add_user_note(req: UserNoteRequest):
+    dt = DigitalTwinManager(req.user_id)
+    twin = dt.add_user_note(req.text)
+    return {"status": "success", "user_id": req.user_id, "twin": twin.model_dump()}
+
+@app.post("/add-health-history", tags=["Digital Twin"])
+def add_health_history(req: HealthHistoryRequest):
+    dt = DigitalTwinManager(req.user_id)
+    twin = dt.add_health_history(req.items)
+    return {"status": "success", "user_id": req.user_id, "twin": twin.model_dump()}
+
+@app.post("/add-family-history", tags=["Digital Twin"])
+def add_family_history(req: FamilyHistoryRequest):
+    dt = DigitalTwinManager(req.user_id)
+    twin = dt.add_family_history(req.items)
+    return {"status": "success", "user_id": req.user_id, "twin": twin.model_dump()}
+
+@app.post("/suggest-followup-questions", tags=["Digital Twin"])
+def suggest_followup(req: FollowupRequest):
+    dt = DigitalTwinManager(req.user_id)
+    context = dt.build_context()
+    try:
+        questions = llm.generate_followup_questions(req.summary_or_text, context)
+        return {
+            "status": "success",
+            "user_id": req.user_id,
+            "context_used": context,
+            "questions": questions
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
