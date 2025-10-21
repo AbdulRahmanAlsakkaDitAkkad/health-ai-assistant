@@ -1,0 +1,26 @@
+{
+  "user_id": "demo_test_phase4",
+  "notes": [
+    {
+      "timestamp": "2025-10-21T11:17:25.441181",
+      "text": "I had a heart pain yesterday"
+    }
+  ],
+  "health_history": [
+    {
+      "condition": "Hypertension",
+      "diagnosis_date": "2023-05-01",
+      "status": "active",
+      "notes": "On Medication"
+    }
+  ],
+  "surgeries": [],
+  "family_history": [
+    {
+      "relation": "father",
+      "condition": "Diabetes",
+      "notes": "Duplicate test"
+    }
+  ],
+  "ingested_texts": []
+}
