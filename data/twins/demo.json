@@ -37,5 +37,31 @@
       "notes": "Diagnosed at age 60"
     }
   ],
-  "ingested_texts": []
+  "ingested_items": [
+    {
+      "timestamp": "2025-10-17T19:08:56.773064",
+      "source": "fake_lab_report.pdf",
+      "text": "Patient Name: John Doe\nDate of Birth: 1990-05-14\nPatient ID: 123456789\nDoctor: Dr. Alice Smith\nDate: 2025-10-02\nTest Ordered: Complete Blood Count (CBC)\nResults:\n- Hemoglobin: 14.2 g/dL (Normal range: 13.5–17.5)\n- WBC Count: 6,500 cells/mcL (Normal range: 4,000–11,000)\n- Platelets: 220,000 per mcL (Normal range: 150,000–450,000)\n- Hematocrit: 42% (Normal range: 38.8–50.0%)\nImpression:\nCBC results within normal limits. No immediate action required.\nRecommendations:\nMaintain a healthy diet and hydration.\nFollow-up in 6 months unless new symptoms arise.\nDoctor Signature: ________________________"
+    }
+  ],
+  "logs": [
+    {
+      "timestamp": "2025-10-17T19:04:43.843566",
+      "response_type": "followup_questions",
+      "content": "1. \"Could my recent fatigue and fever be related to my asthma or hypertension, or could it be something else?\"\n2. \"Given my history of asthma and yesterday's symptoms, should I adjust my current medication regimen?\"\n3. \"I experienced chest pain today. Could this be a symptom of my asthma or could it indicate another issue?\"\n4. \"Given my family history of diabetes and hypertension, am I at an increased risk for developing other conditions?\"\n5. \"What are the potential causes for my recent fatigue and fever, and what tests can be done to determine the cause?\"\n6. \"Should I monitor my blood pressure more frequently due to the chest pain I experienced today?\"\n7. \"Are there any lifestyle changes or additional precautions I should consider given my current health conditions and recent symptoms?\"\n8. \"Given my history of hypertension, how should I manage my blood pressure during this period of increased symptoms?\"\n9. \"Is it necessary to schedule a follow-up appointment due to the chest pain and recent fatigue?\"\n10. \"Are there any over-the-counter medications that can help al",
+      "source": "suggest-followup-questions"
+    },
+    {
+      "timestamp": "2025-10-17T19:07:12.539512",
+      "response_type": "ask_answer",
+      "content": "Chest pain accompanied by fever can be caused by various conditions, some of which may require immediate medical attention. Here are a few possibilities:\n\n1. Pneumonia: An infection in one or both lungs that causes inflammation, resulting in symptoms such as coughing, fever, and chest pain.\n\n2. Myocarditis: Inflammation of the heart muscle, which can cause chest pain, fever, and shortness of breath.\n\n3. Pericarditis: Inflammation of the sac surrounding the heart, causing sharp chest pain that worsens with deep breathing or lying down.\n\n4. Pulmonary embolism: A blockage in the pulmonary artery, often due to a blood clot, which can cause sudden chest pain, shortness of breath, and fever.\n\n5. Costochondritis: Inflammation of the cartilage connecting the ribs to the breastbone, causing chest pain that may mimic heart attack symptoms.\n\n6. Influenza (flu): A viral infection that can cause fever, muscle aches, and chest discomfort.\n\n7. Coronavirus (COVID-19",
+      "source": "ask:What could cause chest pain with fever?"
+    },
+    {
+      "timestamp": "2025-10-17T19:10:08.080859",
+      "response_type": "summary",
+      "content": "The medical report for John Doe, born on May 14, 1990 (Patient ID: 123456789), shows that his Complete Blood Count (CBC) results are within the normal range. Specifically, his Hemoglobin is 14.2 g/dL, WBC Count is 6,500 cells/mcL, Platelets are 220,000 per mcL, and Hematocrit is 42%. Dr. Alice Smith has concluded that no immediate action is required based on these results.\n\nRecommendations for John Doe include maintaining a healthy diet and hydration. A follow-up appointment is scheduled for six months from the date of this report, unless new symptoms arise. Please consult with your healthcare provider for personalized advice regarding this report.",
+      "source": "ingest:fake_lab_report.pdf"
+    }
+  ]
 }

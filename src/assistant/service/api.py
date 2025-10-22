@@ -7,10 +7,10 @@ from typing import Dict, Any
 import warnings
 
 from assistant.llm.ollama_client import OllamaClient
-from assistant.memory.store import mem
+from assistant.memory.store import mem, append_ingested_text
 from assistant.schema import AskReq, AskRes, MemoryList, MemoryItem, Health
 from assistant.ingest.file_ingestor import ingest_file
-# --- NEW/UPDATED IMPORTS ---
+# --- Phase 3 OCR/CV imports ---
 from assistant.ocr.donut_parser import extract_answers_from_image_bytes
 from assistant.ingest.document_router import classify_document, get_question_set
 
@@ -18,11 +18,10 @@ from assistant.ingest.document_router import classify_document, get_question_set
 from pydantic import BaseModel
 from typing import List
 from assistant.memory.digital_twin import DigitalTwinManager
-from assistant.schema.dht_models import HealthHistoryItem, FamilyHistoryItem
-from assistant.llm.ollama_client import OllamaClient
+from assistant.schema.dht_models import HealthHistoryItem, FamilyHistoryItem, SurgeryItem
 
 # ---- FastAPI app ----
-app = FastAPI(title="Private Health LLM", version="0.4.1 - Robust Routing")
+app = FastAPI(title="Private Health LLM", version="0.5.0 - Phase4 Logging & Validation")
 
 # Basic CORS so you can call this from a local web app later
 app.add_middleware(
@@ -50,13 +49,13 @@ def health() -> Health:
     return Health(status="ok")
 
 # -----------------------------------------
-# Ask LLM endpoint
+# Ask LLM endpoint (now logs to DHT)
 # -----------------------------------------
 @app.post("/ask", response_model=AskRes, tags=["Ask"])
 def ask(req: AskReq) -> AskRes:
     user_id = req.user_id or "demo"
 
-    # 1) Build messages
+    # 1) Build messages from legacy mem (kept for backward compatibility)
     recent = mem.format_for_context(user_id, limit=8)
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     messages.extend(recent)
@@ -68,14 +67,17 @@ def ask(req: AskReq) -> AskRes:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"LLM error: {e!r}")
 
-    # 3) Store in memory
+    # 3) Store in memory + DHT log (explainability)
     mem.add(user_id=user_id, role="user", content=req.question)
     mem.add(user_id=user_id, role="assistant", content=answer)
+
+    dt = DigitalTwinManager(user_id)
+    dt.log_event(response_type="ask_answer", content=answer, source=f"ask:{req.question}")
 
     return AskRes(answer=answer)
 
 # -----------------------------------------
-# Memory endpoints
+# Memory endpoints (legacy)
 # -----------------------------------------
 @app.get("/memory/{user_id}", response_model=MemoryList, tags=["Memory"])
 def get_memory(user_id: str, limit: int = 20) -> MemoryList:
@@ -88,7 +90,7 @@ def clear_memory(user_id: str):
     return {"status": "cleared", "user_id": user_id}
 
 # -------------------------------------------------------------
-# RESTORED ENDPOINT: General OCR & LLM Summarization (The Fallback)
+# General OCR & LLM Summarization (Fallback path) + DHT logging
 # -------------------------------------------------------------
 @app.post("/ingest", tags=["Ingest"])
 async def ingest_file_api(
@@ -96,11 +98,12 @@ async def ingest_file_api(
     user_id: str = Query(default="demo")
 ):
     file_bytes = await file.read()
-    filename = file.filename.lower()
+    filename = file.filename or "upload"
+    filename_l = filename.lower()
 
-    if filename.endswith(".pdf"):
+    if filename_l.endswith(".pdf"):
         file_type = "pdf"
-    elif filename.endswith((".png", ".jpg", ".jpeg")):
+    elif filename_l.endswith((".png", ".jpg", ".jpeg")):
         file_type = "image"
     else:
         raise HTTPException(status_code=400, detail="Unsupported file type.")
@@ -110,30 +113,37 @@ async def ingest_file_api(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ingestion failed: {e!r}")
 
-    # 🧠 Store raw extracted text in memory
-    mem.add(user_id=user_id, role="user", content=f"[Uploaded {file_type}] {extracted_text}")
+    # save raw text into DHT as ingested item (source = filename)
+    append_ingested_text(user_id, extracted_text, source=filename)
 
-    # 🤖 Generate auto-summary via LLM
+    # Generate auto-summary via LLM + log to DHT
     try:
         summary = llm.chat([
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Summarize this medical report:\n\n{extracted_text}"}
         ])
+        # Log in DHT for explainability
+        DigitalTwinManager(user_id).log_event(
+            response_type="summary",
+            content=summary,
+            source=f"ingest:{filename}"
+        )
     except Exception as e:
         summary = "Summary generation failed."
         print(f"⚠️ LLM summary failed: {e}")
 
-    # 🧠 Store summary in memory
+    # Legacy mem storage
+    mem.add(user_id=user_id, role="user", content=f"[Uploaded {file_type}] {extracted_text}")
     mem.add(user_id=user_id, role="assistant", content=summary)
 
-    # 🚨 Basic alert logic: flag if abnormalities are mentioned
+    # Basic alert logic
     alert_keywords = ["abnormal", "high", "low", "elevated", "critical"]
     alert_triggered = any(word in extracted_text.lower() for word in alert_keywords)
 
     return {
         "status": "success",
         "user_id": user_id,
-        "filename": file.filename,
+        "filename": filename,
         "file_type": file_type,
         "extracted_text": extracted_text,
         "summary": summary,
@@ -141,7 +151,7 @@ async def ingest_file_api(
     }
 
 # -------------------------------------------------------------
-# MASTER ENDPOINT: Dynamic Routing & Extraction
+# MASTER ENDPOINT: Dynamic Routing & Extraction + DHT logging
 # -------------------------------------------------------------
 @app.post("/upload-document", tags=["Master Ingestion"])
 async def upload_document_master(
@@ -149,8 +159,9 @@ async def upload_document_master(
     user_id: str = Query(default="demo")
 ) -> Dict[str, Any]:
     file_bytes = await file.read()
-    filename = file.filename.lower()
-    file_type = "pdf" if filename.endswith(".pdf") else "image"
+    filename = file.filename or "upload"
+    filename_l = filename.lower()
+    file_type = "pdf" if filename_l.endswith(".pdf") else "image"
 
     # 1. Initial OCR (Raw Text Extraction) for Classification Input
     try:
@@ -158,11 +169,14 @@ async def upload_document_master(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Initial ingestion failed: {e!r}")
 
+    # Save ingested text into DHT
+    append_ingested_text(user_id, extracted_text, source=filename)
+
     # 2. Dynamic Routing (Classification)
     doc_type = classify_document(extracted_text)
     structured_data = {}
 
-    # 3. Attempt Structured Extraction (only for images of specific types)
+    # 3. Attempt Structured Extraction (images only)
     if doc_type != "general_text" and file_type == "image":
         questions = get_question_set(doc_type)
         try:
@@ -170,7 +184,7 @@ async def upload_document_master(
         except Exception as e:
             warnings.warn(f"Donut extraction failed for {doc_type}. Error: {e}")
 
-    # 4. LLM Summarization and Memory Storage
+    # 4. LLM Summarization and Memory Storage + DHT log
     try:
         summary = llm.chat([
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -178,6 +192,12 @@ async def upload_document_master(
         ])
         mem.add(user_id=user_id, role="user", content=f"[Uploaded {doc_type}] {extracted_text}")
         mem.add(user_id=user_id, role="assistant", content=summary)
+
+        DigitalTwinManager(user_id).log_event(
+            response_type="summary",
+            content=summary,
+            source=f"upload:{filename}|type:{doc_type}"
+        )
     except Exception:
         summary = "Summary generation failed."
 
@@ -189,7 +209,7 @@ async def upload_document_master(
     }
 
 # -------------------------------------------------------------
-# RESTORED ENDPOINT: Specialized Donut Endpoint
+# Specialized Donut Endpoint (with fallback) + DHT logging
 # -------------------------------------------------------------
 @app.post("/parse-lab-report", tags=["CV"])
 async def parse_lab_report(
@@ -197,9 +217,10 @@ async def parse_lab_report(
     user_id: str = Query(default="demo")
 ):
     file_bytes = await file.read()
-    filename = file.filename.lower()
+    filename = file.filename or "upload"
+    filename_l = filename.lower()
 
-    if not filename.endswith((".jpg", ".jpeg", ".png")):
+    if not filename_l.endswith((".jpg", ".jpeg", ".png")):
         raise HTTPException(status_code=400, detail="Only images are supported.")
 
     # 1. Classify the document type
@@ -209,6 +230,9 @@ async def parse_lab_report(
         questions = get_question_set(doc_type)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Initial classification failed: {e!r}")
+
+    # Save ingested text
+    append_ingested_text(user_id, extracted_text, source=filename)
 
     # 2. Attempt Structured Extraction
     parsed_answers = {}
@@ -222,6 +246,12 @@ async def parse_lab_report(
                     {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": f"Summarize this document (classified as {doc_type}):\n\n{extracted_text}"}
                 ])
+                # Log summary in DHT
+                DigitalTwinManager(user_id).log_event(
+                    response_type="summary",
+                    content=summary,
+                    source=f"parse-lab-report:{filename}|type:{doc_type}"
+                )
                 return {
                     "status": "fallback_summary",
                     "doc_type": doc_type,
@@ -234,12 +264,12 @@ async def parse_lab_report(
         "status": "success",
         "user_id": user_id,
         "doc_type": doc_type,
-        "filename": file.filename,
+        "filename": filename,
         "parsed_answers": parsed_answers,
     }
 
 # -------------------------------------------------------------
-# NEW ENDPOINTS: Digital Twin Expansion
+# NEW ENDPOINTS: Digital Twin Expansion (unchanged inputs; now dedup + logs elsewhere)
 # -------------------------------------------------------------
 class UserNoteRequest(BaseModel):
     user_id: str
@@ -248,6 +278,10 @@ class UserNoteRequest(BaseModel):
 class HealthHistoryRequest(BaseModel):
     user_id: str
     items: List[HealthHistoryItem]
+
+class SurgeryRequest(BaseModel):
+    user_id: str
+    items: List[SurgeryItem]
 
 class FamilyHistoryRequest(BaseModel):
     user_id: str
@@ -269,6 +303,12 @@ def add_health_history(req: HealthHistoryRequest):
     twin = dt.add_health_history(req.items)
     return {"status": "success", "user_id": req.user_id, "twin": twin.model_dump()}
 
+@app.post("/add-surgeries", tags=["Digital Twin"])
+def add_surgeries(req: SurgeryRequest):
+    dt = DigitalTwinManager(req.user_id)
+    twin = dt.add_surgeries(req.items)
+    return {"status": "success", "user_id": req.user_id, "twin": twin.model_dump()}
+
 @app.post("/add-family-history", tags=["Digital Twin"])
 def add_family_history(req: FamilyHistoryRequest):
     dt = DigitalTwinManager(req.user_id)
@@ -281,6 +321,12 @@ def suggest_followup(req: FollowupRequest):
     context = dt.build_context()
     try:
         questions = llm.generate_followup_questions(req.summary_or_text, context)
+        # Log into DHT for traceability
+        dt.log_event(
+            response_type="followup_questions",
+            content=questions,
+            source="suggest-followup-questions"
+        )
         return {
             "status": "success",
             "user_id": req.user_id,
