@@ -8,6 +8,8 @@ from assistant.schema.dht_models import (
     HealthHistoryItem,
     FamilyHistoryItem,
     SurgeryItem,
+    WearableRecord,     # ✅ correct name
+    RiskPrediction,     # ✅ fixed name
 )
 from assistant.memory.store import (
     load_twin,
@@ -42,6 +44,18 @@ class DigitalTwinManager:
 
     def add_family_history(self, items: List[FamilyHistoryItem]) -> DigitalHealthTwin:
         self.twin.family_history = dedupe_family_history(self.twin.family_history, items)
+        save_twin(self.twin)
+        return self.twin
+
+    # ---- New: Wearable data ingestion ----
+    def add_wearables(self, items: List[WearableRecord]) -> DigitalHealthTwin:
+        self.twin.wearables.extend(items)
+        save_twin(self.twin)
+        return self.twin
+
+    # ---- New: Prediction results ----
+    def add_predictions(self, items: List[RiskPrediction]) -> DigitalHealthTwin:
+        self.twin.predictions.extend(items)
         save_twin(self.twin)
         return self.twin
 

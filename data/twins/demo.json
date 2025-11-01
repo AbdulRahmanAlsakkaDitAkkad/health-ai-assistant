@@ -44,6 +44,32 @@
       "text": "Patient Name: John Doe\nDate of Birth: 1990-05-14\nPatient ID: 123456789\nDoctor: Dr. Alice Smith\nDate: 2025-10-02\nTest Ordered: Complete Blood Count (CBC)\nResults:\n- Hemoglobin: 14.2 g/dL (Normal range: 13.5–17.5)\n- WBC Count: 6,500 cells/mcL (Normal range: 4,000–11,000)\n- Platelets: 220,000 per mcL (Normal range: 150,000–450,000)\n- Hematocrit: 42% (Normal range: 38.8–50.0%)\nImpression:\nCBC results within normal limits. No immediate action required.\nRecommendations:\nMaintain a healthy diet and hydration.\nFollow-up in 6 months unless new symptoms arise.\nDoctor Signature: ________________________"
     }
   ],
+  "wearables": [
+    {
+      "timestamp": "2025-10-24T20:21:53.380266",
+      "steps": 8000,
+      "heart_rate": 90.0,
+      "sleep_hours": 6.5
+    },
+    {
+      "timestamp": "2025-10-24T20:21:53.391252",
+      "steps": 9500,
+      "heart_rate": 85.0,
+      "sleep_hours": 7.0
+    }
+  ],
+  "predictions": [
+    {
+      "condition": "diabetes",
+      "risk_score": 0.5,
+      "explanation": "Computed risk for diabetes based on history/family/wearables."
+    },
+    {
+      "condition": "hypertension",
+      "risk_score": 1.0,
+      "explanation": "Computed risk for hypertension based on history/family/wearables."
+    }
+  ],
   "logs": [
     {
       "timestamp": "2025-10-17T19:04:43.843566",
@@ -62,6 +88,18 @@
       "response_type": "summary",
       "content": "The medical report for John Doe, born on May 14, 1990 (Patient ID: 123456789), shows that his Complete Blood Count (CBC) results are within the normal range. Specifically, his Hemoglobin is 14.2 g/dL, WBC Count is 6,500 cells/mcL, Platelets are 220,000 per mcL, and Hematocrit is 42%. Dr. Alice Smith has concluded that no immediate action is required based on these results.\n\nRecommendations for John Doe include maintaining a healthy diet and hydration. A follow-up appointment is scheduled for six months from the date of this report, unless new symptoms arise. Please consult with your healthcare provider for personalized advice regarding this report.",
       "source": "ingest:fake_lab_report.pdf"
+    },
+    {
+      "timestamp": "2025-10-24T20:22:45.082959",
+      "response_type": "prediction",
+      "content": "[{'condition': 'diabetes', 'risk_score': 0.5, 'explanation': 'Computed risk for diabetes based on history/family/wearables.'}, {'condition': 'hypertension', 'risk_score': 1.0, 'explanation': 'Computed risk for hypertension based on history/family/wearables.'}]",
+      "source": "predict-risk"
+    },
+    {
+      "timestamp": "2025-10-24T20:27:33.520310",
+      "response_type": "prediction",
+      "content": "{'steps': 8750, 'heart_rate': 87.5, 'sleep_hours': 6.8}",
+      "source": "forecast-wearables"
     }
   ]
 }

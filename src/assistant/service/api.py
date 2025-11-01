@@ -3,25 +3,33 @@
 from __future__ import annotations
 from fastapi import FastAPI, HTTPException, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Dict, Any
+from typing import Dict, Any, List
 import warnings
 
+from pydantic import BaseModel
+
+# --- Core imports ---
 from assistant.llm.ollama_client import OllamaClient
-from assistant.memory.store import mem, append_ingested_text
+from assistant.memory.store import mem, append_ingested_text, save_twin
 from assistant.schema import AskReq, AskRes, MemoryList, MemoryItem, Health
 from assistant.ingest.file_ingestor import ingest_file
+
 # --- Phase 3 OCR/CV imports ---
 from assistant.ocr.donut_parser import extract_answers_from_image_bytes
 from assistant.ingest.document_router import classify_document, get_question_set
 
 # --- Digital Twin imports ---
-from pydantic import BaseModel
-from typing import List
 from assistant.memory.digital_twin import DigitalTwinManager
-from assistant.schema.dht_models import HealthHistoryItem, FamilyHistoryItem, SurgeryItem
+from assistant.schema.dht_models import (
+    HealthHistoryItem,
+    FamilyHistoryItem,
+    SurgeryItem,
+    WearableRecord,
+    RiskPrediction,
+)
 
 # ---- FastAPI app ----
-app = FastAPI(title="Private Health LLM", version="0.5.0 - Phase4 Logging & Validation")
+app = FastAPI(title="Private Health LLM", version="0.6.0 - Phase5 Predictive Modeling")
 
 # Basic CORS so you can call this from a local web app later
 app.add_middleware(
@@ -49,25 +57,22 @@ def health() -> Health:
     return Health(status="ok")
 
 # -----------------------------------------
-# Ask LLM endpoint (now logs to DHT)
+# Ask LLM endpoint (logs to DHT)
 # -----------------------------------------
 @app.post("/ask", response_model=AskRes, tags=["Ask"])
 def ask(req: AskReq) -> AskRes:
     user_id = req.user_id or "demo"
 
-    # 1) Build messages from legacy mem (kept for backward compatibility)
     recent = mem.format_for_context(user_id, limit=8)
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     messages.extend(recent)
     messages.append({"role": "user", "content": req.question})
 
-    # 2) Call LLM
     try:
         answer = llm.chat(messages, temperature=0.1)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"LLM error: {e!r}")
 
-    # 3) Store in memory + DHT log (explainability)
     mem.add(user_id=user_id, role="user", content=req.question)
     mem.add(user_id=user_id, role="assistant", content=answer)
 
@@ -90,13 +95,10 @@ def clear_memory(user_id: str):
     return {"status": "cleared", "user_id": user_id}
 
 # -------------------------------------------------------------
-# General OCR & LLM Summarization (Fallback path) + DHT logging
+# General OCR & LLM Summarization + DHT logging
 # -------------------------------------------------------------
 @app.post("/ingest", tags=["Ingest"])
-async def ingest_file_api(
-    file: UploadFile = File(...),
-    user_id: str = Query(default="demo")
-):
+async def ingest_file_api(file: UploadFile = File(...), user_id: str = Query(default="demo")):
     file_bytes = await file.read()
     filename = file.filename or "upload"
     filename_l = filename.lower()
@@ -113,16 +115,13 @@ async def ingest_file_api(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ingestion failed: {e!r}")
 
-    # save raw text into DHT as ingested item (source = filename)
     append_ingested_text(user_id, extracted_text, source=filename)
 
-    # Generate auto-summary via LLM + log to DHT
     try:
         summary = llm.chat([
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Summarize this medical report:\n\n{extracted_text}"}
         ])
-        # Log in DHT for explainability
         DigitalTwinManager(user_id).log_event(
             response_type="summary",
             content=summary,
@@ -132,11 +131,9 @@ async def ingest_file_api(
         summary = "Summary generation failed."
         print(f"⚠️ LLM summary failed: {e}")
 
-    # Legacy mem storage
     mem.add(user_id=user_id, role="user", content=f"[Uploaded {file_type}] {extracted_text}")
     mem.add(user_id=user_id, role="assistant", content=summary)
 
-    # Basic alert logic
     alert_keywords = ["abnormal", "high", "low", "elevated", "critical"]
     alert_triggered = any(word in extracted_text.lower() for word in alert_keywords)
 
@@ -154,29 +151,22 @@ async def ingest_file_api(
 # MASTER ENDPOINT: Dynamic Routing & Extraction + DHT logging
 # -------------------------------------------------------------
 @app.post("/upload-document", tags=["Master Ingestion"])
-async def upload_document_master(
-    file: UploadFile = File(...),
-    user_id: str = Query(default="demo")
-) -> Dict[str, Any]:
+async def upload_document_master(file: UploadFile = File(...), user_id: str = Query(default="demo")) -> Dict[str, Any]:
     file_bytes = await file.read()
     filename = file.filename or "upload"
     filename_l = filename.lower()
     file_type = "pdf" if filename_l.endswith(".pdf") else "image"
 
-    # 1. Initial OCR (Raw Text Extraction) for Classification Input
     try:
         extracted_text = ingest_file(file_bytes, file_type)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Initial ingestion failed: {e!r}")
 
-    # Save ingested text into DHT
     append_ingested_text(user_id, extracted_text, source=filename)
 
-    # 2. Dynamic Routing (Classification)
     doc_type = classify_document(extracted_text)
     structured_data = {}
 
-    # 3. Attempt Structured Extraction (images only)
     if doc_type != "general_text" and file_type == "image":
         questions = get_question_set(doc_type)
         try:
@@ -184,7 +174,6 @@ async def upload_document_master(
         except Exception as e:
             warnings.warn(f"Donut extraction failed for {doc_type}. Error: {e}")
 
-    # 4. LLM Summarization and Memory Storage + DHT log
     try:
         summary = llm.chat([
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -209,13 +198,10 @@ async def upload_document_master(
     }
 
 # -------------------------------------------------------------
-# Specialized Donut Endpoint (with fallback) + DHT logging
+# Specialized Donut Endpoint + DHT logging
 # -------------------------------------------------------------
 @app.post("/parse-lab-report", tags=["CV"])
-async def parse_lab_report(
-    file: UploadFile = File(...),
-    user_id: str = Query(default="demo")
-):
+async def parse_lab_report(file: UploadFile = File(...), user_id: str = Query(default="demo")):
     file_bytes = await file.read()
     filename = file.filename or "upload"
     filename_l = filename.lower()
@@ -223,7 +209,6 @@ async def parse_lab_report(
     if not filename_l.endswith((".jpg", ".jpeg", ".png")):
         raise HTTPException(status_code=400, detail="Only images are supported.")
 
-    # 1. Classify the document type
     try:
         extracted_text = ingest_file(file_bytes, file_type="image")
         doc_type = classify_document(extracted_text)
@@ -231,10 +216,8 @@ async def parse_lab_report(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Initial classification failed: {e!r}")
 
-    # Save ingested text
     append_ingested_text(user_id, extracted_text, source=filename)
 
-    # 2. Attempt Structured Extraction
     parsed_answers = {}
     if doc_type != "general_text":
         try:
@@ -246,17 +229,12 @@ async def parse_lab_report(
                     {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": f"Summarize this document (classified as {doc_type}):\n\n{extracted_text}"}
                 ])
-                # Log summary in DHT
                 DigitalTwinManager(user_id).log_event(
                     response_type="summary",
                     content=summary,
                     source=f"parse-lab-report:{filename}|type:{doc_type}"
                 )
-                return {
-                    "status": "fallback_summary",
-                    "doc_type": doc_type,
-                    "summary": summary,
-                }
+                return {"status": "fallback_summary", "doc_type": doc_type, "summary": summary}
             except Exception:
                 raise HTTPException(status_code=500, detail="Both structured and summary failed.")
 
@@ -269,7 +247,7 @@ async def parse_lab_report(
     }
 
 # -------------------------------------------------------------
-# NEW ENDPOINTS: Digital Twin Expansion (unchanged inputs; now dedup + logs elsewhere)
+# NEW ENDPOINTS: Digital Twin Expansion
 # -------------------------------------------------------------
 class UserNoteRequest(BaseModel):
     user_id: str
@@ -321,17 +299,71 @@ def suggest_followup(req: FollowupRequest):
     context = dt.build_context()
     try:
         questions = llm.generate_followup_questions(req.summary_or_text, context)
-        # Log into DHT for traceability
-        dt.log_event(
-            response_type="followup_questions",
-            content=questions,
-            source="suggest-followup-questions"
-        )
-        return {
-            "status": "success",
-            "user_id": req.user_id,
-            "context_used": context,
-            "questions": questions
-        }
+        dt.log_event("followup_questions", content=questions, source="suggest-followup-questions")
+        return {"status": "success", "user_id": req.user_id, "context_used": context, "questions": questions}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# -------------------------------------------------------------
+# PHASE 5: Predictive Modeling Endpoints
+# -------------------------------------------------------------
+class WearableRequest(BaseModel):
+    user_id: str
+    records: List[WearableRecord]
+
+class PredictionRequest(BaseModel):
+    user_id: str
+    conditions: List[str]
+
+@app.post("/add-wearable-data", tags=["Predictive Modeling"])
+def add_wearable_data(req: WearableRequest):
+    dt = DigitalTwinManager(req.user_id)
+    twin = dt.twin
+    twin.wearables.extend(req.records)
+    save_twin(twin)
+    return {"status": "success", "user_id": req.user_id, "twin": twin.model_dump()}
+
+@app.post("/predict-risk", tags=["Predictive Modeling"])
+def predict_risk(req: PredictionRequest):
+    dt = DigitalTwinManager(req.user_id)
+    twin = dt.twin
+
+    predictions: List[RiskPrediction] = []
+    for cond in req.conditions:
+        base_score = 0.3
+        if any(f.condition.lower() == cond.lower() for f in twin.family_history):
+            base_score += 0.2
+        if any(h.condition.lower() == cond.lower() for h in twin.health_history):
+            base_score += 0.3
+        if twin.wearables:
+            avg_hr = sum(w.heart_rate or 0 for w in twin.wearables) / len(twin.wearables)
+            if cond.lower() == "hypertension" and avg_hr > 85:
+                base_score += 0.2
+        score = min(1.0, base_score)
+
+        pred = RiskPrediction(condition=cond, risk_score=score,
+                              explanation=f"Computed risk for {cond} based on history/family/wearables.")
+        twin.predictions.append(pred)
+        predictions.append(pred)
+
+    save_twin(twin)
+    dt.log_event("prediction", content=str([p.model_dump() for p in predictions]), source="predict-risk")
+
+    return {"status": "success", "user_id": req.user_id, "predictions": [p.model_dump() for p in predictions]}
+
+@app.get("/forecast-wearables", tags=["Predictive Modeling"])
+def forecast_wearables(user_id: str):
+    dt = DigitalTwinManager(user_id)
+    twin = dt.twin
+    if not twin.wearables:
+        raise HTTPException(status_code=400, detail="No wearable data available.")
+
+    avg_steps = sum(w.steps or 0 for w in twin.wearables) / len(twin.wearables)
+    avg_hr = sum(w.heart_rate or 0 for w in twin.wearables) / len(twin.wearables)
+    avg_sleep = sum(w.sleep_hours or 0 for w in twin.wearables) / len(twin.wearables)
+
+    forecast = {"steps": round(avg_steps), "heart_rate": round(avg_hr, 1), "sleep_hours": round(avg_sleep, 1)}
+
+    dt.log_event("prediction", content=str(forecast), source="forecast-wearables")
+
+    return {"status": "success", "user_id": user_id, "forecast": forecast}

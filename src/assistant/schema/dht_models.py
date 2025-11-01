@@ -13,7 +13,7 @@ class UserNote(BaseModel):
 
 class HealthHistoryItem(BaseModel):
     condition: str
-    diagnosis_date: Optional[str] = None  # e.g. "2022-05-01" or "2022-05"
+    diagnosis_date: Optional[str] = None
     status: Optional[Literal["active", "resolved", "unknown"]] = "active"
     notes: Optional[str] = None
 
@@ -25,27 +25,43 @@ class SurgeryItem(BaseModel):
 
 
 class FamilyHistoryItem(BaseModel):
-    relation: str  # e.g. mother, father, sibling
+    relation: str
     condition: str
     notes: Optional[str] = None
 
 
 class IngestedItem(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.utcnow)
-    source: str  # filename or "user_upload" etc
+    source: str
     text: str
+
+
+# ---------- Wearable data (for predictive modeling) ----------
+class WearableRecord(BaseModel):
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    steps: Optional[int] = None
+    heart_rate: Optional[float] = None
+    sleep_hours: Optional[float] = None
+
+
+# ---------- Prediction results ----------
+class RiskPrediction(BaseModel):
+    condition: str
+    risk_score: float  # between 0 and 1
+    explanation: str
 
 
 # ---------- Logging / explainability ----------
 class LogEntry(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     response_type: Literal[
-        "summary",           # LLM summaries
-        "ask_answer",        # answers from /ask
-        "followup_questions" # output from /suggest-followup-questions
+        "summary",
+        "ask_answer",
+        "followup_questions",
+        "prediction"
     ]
     content: str
-    source: Optional[str] = None  # e.g., "ingest:report.pdf", "ask:<question>"
+    source: Optional[str] = None
 
 
 # ---------- The Digital Health Twin ----------
@@ -57,6 +73,10 @@ class DigitalHealthTwin(BaseModel):
     surgeries: List[SurgeryItem] = Field(default_factory=list)
     family_history: List[FamilyHistoryItem] = Field(default_factory=list)
     ingested_items: List[IngestedItem] = Field(default_factory=list)
+
+    # Phase 5 extensions
+    wearables: List[WearableRecord] = Field(default_factory=list)
+    predictions: List[RiskPrediction] = Field(default_factory=list)
 
     # Explainability / trace
     logs: List[LogEntry] = Field(default_factory=list)
@@ -87,6 +107,11 @@ class DigitalHealthTwin(BaseModel):
             parts.append(f"Recent notes: {last_notes}")
         if self.ingested_items:
             parts.append(f"Ingested docs: {min(len(self.ingested_items), 20)}")
+        if self.wearables:
+            parts.append(f"Wearable records: {len(self.wearables)}")
+        if self.predictions:
+            preds = "; ".join(f"{p.condition}:{p.risk_score:.2f}" for p in self.predictions[-5:])
+            parts.append(f"Predictions: {preds}")
 
         ctx = " | ".join(parts) if parts else "No significant prior data."
         return ctx[:max_chars]
