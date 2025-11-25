@@ -56,6 +56,54 @@
       "steps": 9500,
       "heart_rate": 85.0,
       "sleep_hours": 7.0
+    },
+    {
+      "timestamp": "2025-11-02T15:26:57.135573",
+      "steps": 8000,
+      "heart_rate": 90.0,
+      "sleep_hours": 6.5
+    },
+    {
+      "timestamp": "2025-11-02T15:26:57.135573",
+      "steps": 9500,
+      "heart_rate": 85.0,
+      "sleep_hours": 7.0
+    },
+    {
+      "timestamp": "2025-11-02T15:40:15.386332",
+      "steps": 8000,
+      "heart_rate": 90.0,
+      "sleep_hours": 6.5
+    },
+    {
+      "timestamp": "2025-11-02T15:40:15.386332",
+      "steps": 9500,
+      "heart_rate": 85.0,
+      "sleep_hours": 7.0
+    },
+    {
+      "timestamp": "2025-11-02T16:08:42.464781",
+      "steps": 8000,
+      "heart_rate": 90.0,
+      "sleep_hours": 6.5
+    },
+    {
+      "timestamp": "2025-11-02T16:08:42.464781",
+      "steps": 9500,
+      "heart_rate": 85.0,
+      "sleep_hours": 7.0
+    },
+    {
+      "timestamp": "2025-11-03T13:51:07.982887",
+      "steps": 8000,
+      "heart_rate": 90.0,
+      "sleep_hours": 6.5
+    },
+    {
+      "timestamp": "2025-11-03T13:51:07.983890",
+      "steps": 9500,
+      "heart_rate": 85.0,
+      "sleep_hours": 7.0
     }
   ],
   "predictions": [
@@ -68,6 +116,114 @@
       "condition": "hypertension",
       "risk_score": 1.0,
       "explanation": "Computed risk for hypertension based on history/family/wearables."
+    },
+    {
+      "condition": "diabetes",
+      "risk_score": 0.5,
+      "explanation": "Computed risk for diabetes based on history/family/wearables."
+    },
+    {
+      "condition": "hypertension",
+      "risk_score": 1.0,
+      "explanation": "Computed risk for hypertension based on history/family/wearables."
+    },
+    {
+      "condition": "diabetes",
+      "risk_score": 0.5,
+      "explanation": "Computed risk for diabetes based on history/family/wearables."
+    },
+    {
+      "condition": "hypertension",
+      "risk_score": 1.0,
+      "explanation": "Computed risk for hypertension based on history/family/wearables."
+    },
+    {
+      "condition": "diabetes",
+      "risk_score": 0.5,
+      "explanation": "Computed risk for diabetes based on history/family/wearables."
+    },
+    {
+      "condition": "hypertension",
+      "risk_score": 1.0,
+      "explanation": "Computed risk for hypertension based on history/family/wearables."
+    },
+    {
+      "condition": "diabetes",
+      "risk_score": 0.5,
+      "explanation": "Risk for diabetes computed."
+    },
+    {
+      "condition": "hypertension",
+      "risk_score": 1.0,
+      "explanation": "Risk for hypertension computed."
+    }
+  ],
+  "medications": [
+    {
+      "name": "Ibuprofen",
+      "dosage": "400 mg",
+      "schedule": "twice daily",
+      "start_date": null,
+      "end_date": null,
+      "notes": null
+    },
+    {
+      "name": "Aspirin",
+      "dosage": "100 mg",
+      "schedule": "once daily",
+      "start_date": null,
+      "end_date": null,
+      "notes": null
+    },
+    {
+      "name": "Ibuprofen",
+      "dosage": "400 mg",
+      "schedule": "twice daily",
+      "start_date": null,
+      "end_date": null,
+      "notes": null
+    },
+    {
+      "name": "Aspirin",
+      "dosage": "100 mg",
+      "schedule": "once daily",
+      "start_date": null,
+      "end_date": null,
+      "notes": null
+    }
+  ],
+  "appointments": [
+    {
+      "id": "appt-1-1763035939",
+      "title": "Cardiologist follow-up",
+      "start_time": "2025-11-20T09:00:00",
+      "end_time": "2025-11-20T09:30:00",
+      "location": "Clinic A, Room 3",
+      "notes": "Bring latest blood pressure readings.",
+      "created_at": "2025-11-13T13:12:19.945481"
+    },
+    {
+      "id": "appt-2-1763037975",
+      "title": "Cardiologist follow-up",
+      "start_time": "2025-11-20T09:00:00",
+      "end_time": "2025-11-20T09:30:00",
+      "location": "Clinic A, Room 3",
+      "notes": "Bring latest blood pressure readings.",
+      "created_at": "2025-11-13T13:46:15.388037"
+    }
+  ],
+  "doctor_notes": [
+    {
+      "timestamp": "2025-11-13T13:39:36.765994",
+      "raw_text": "Patient seen for hypertension follow-up. BP improved compared to last visit. Continue current medication. Recommend 30 minutes of walking 5 times per week. Schedule next visit in 6 months.",
+      "summary": "During the hypertension follow-up appointment, the patient's blood pressure has improved compared to the last visit. The doctor advised continuing the current medication (Ibuprofen and Aspirin) as prescribed. Additionally, the patient was recommended to engage in 30 minutes of walking for 5 days a week for better health. The next appointment is scheduled for 6 months from now.",
+      "visit_type": "doctor"
+    },
+    {
+      "timestamp": "2025-11-13T13:48:48.029131",
+      "raw_text": "Patient seen for hypertension follow-up. BP improved compared to last visit. Continue current medication. Recommend 30 minutes of walking 5 times per week. Schedule next visit in 6 months.",
+      "summary": "During the hypertension follow-up appointment, the patient's blood pressure has improved compared to the last visit. The doctor advised that the current medication regimen should continue. Additionally, the patient was recommended to walk for 30 minutes, five times a week for better health. The next visit is scheduled in 6 months.",
+      "visit_type": "doctor"
     }
   ],
   "logs": [
@@ -100,6 +256,132 @@
       "response_type": "prediction",
       "content": "{'steps': 8750, 'heart_rate': 87.5, 'sleep_hours': 6.8}",
       "source": "forecast-wearables"
+    },
+    {
+      "timestamp": "2025-11-02T15:27:12.741614",
+      "response_type": "prediction",
+      "content": "[{'condition': 'diabetes', 'risk_score': 0.5, 'explanation': 'Computed risk for diabetes based on history/family/wearables.'}, {'condition': 'hypertension', 'risk_score': 1.0, 'explanation': 'Computed risk for hypertension based on history/family/wearables.'}]",
+      "source": "predict-risk"
+    },
+    {
+      "timestamp": "2025-11-02T15:27:34.978826",
+      "response_type": "prediction",
+      "content": "{'steps': 8750, 'heart_rate': 87.5, 'sleep_hours': 6.8}",
+      "source": "forecast-wearables"
+    },
+    {
+      "timestamp": "2025-11-02T15:40:27.964467",
+      "response_type": "prediction",
+      "content": "[{'condition': 'diabetes', 'risk_score': 0.5, 'explanation': 'Computed risk for diabetes based on history/family/wearables.'}, {'condition': 'hypertension', 'risk_score': 1.0, 'explanation': 'Computed risk for hypertension based on history/family/wearables.'}]",
+      "source": "predict-risk"
+    },
+    {
+      "timestamp": "2025-11-02T15:40:42.220065",
+      "response_type": "prediction",
+      "content": "{'steps': 8750, 'heart_rate': 87.5, 'sleep_hours': 6.8}",
+      "source": "forecast-wearables"
+    },
+    {
+      "timestamp": "2025-11-02T16:08:55.892621",
+      "response_type": "prediction",
+      "content": "[{'condition': 'diabetes', 'risk_score': 0.5, 'explanation': 'Computed risk for diabetes based on history/family/wearables.'}, {'condition': 'hypertension', 'risk_score': 1.0, 'explanation': 'Computed risk for hypertension based on history/family/wearables.'}]",
+      "source": "predict-risk"
+    },
+    {
+      "timestamp": "2025-11-02T16:09:05.553895",
+      "response_type": "prediction",
+      "content": "{'steps': 8750, 'heart_rate': 87.5, 'sleep_hours': 6.8}",
+      "source": "forecast-wearables"
+    },
+    {
+      "timestamp": "2025-11-02T16:27:18.344322",
+      "response_type": "qr",
+      "content": "QR generated scope=clinician_view",
+      "source": "generate-dht-qr"
+    },
+    {
+      "timestamp": "2025-11-02T16:28:06.192460",
+      "response_type": "qr",
+      "content": "QR generated scope=clinician_view",
+      "source": "generate-dht-qr"
+    },
+    {
+      "timestamp": "2025-11-02T16:28:52.074046",
+      "response_type": "qr",
+      "content": "QR decoded scope=clinician_view",
+      "source": "decode-dht-token"
+    },
+    {
+      "timestamp": "2025-11-02T16:47:50.643684",
+      "response_type": "qr",
+      "content": "QR generated scope=clinician_view",
+      "source": "generate-dht-qr"
+    },
+    {
+      "timestamp": "2025-11-02T16:48:05.802855",
+      "response_type": "qr",
+      "content": "QR decoded scope=clinician_view",
+      "source": "decode-dht-token"
+    },
+    {
+      "timestamp": "2025-11-03T13:51:27.619112",
+      "response_type": "qr",
+      "content": "QR generated scope=clinician_view",
+      "source": "generate-dht-qr"
+    },
+    {
+      "timestamp": "2025-11-03T13:51:50.970244",
+      "response_type": "qr",
+      "content": "QR decoded scope=clinician_view",
+      "source": "decode-dht-token"
+    },
+    {
+      "timestamp": "2025-11-13T13:07:33.739489",
+      "response_type": "medication",
+      "content": "Added 2 meds",
+      "source": "add-medications"
+    },
+    {
+      "timestamp": "2025-11-13T13:08:46.530509",
+      "response_type": "medication",
+      "content": "Interaction check for meds=['Ibuprofen', 'Aspirin'] -> 1 hits",
+      "source": "check-medication-interactions"
+    },
+    {
+      "timestamp": "2025-11-13T13:12:19.959057",
+      "response_type": "appointment",
+      "content": "Booked Cardiologist follow-up from 2025-11-20T09:00:00 to 2025-11-20T09:30:00",
+      "source": "book-appointment"
+    },
+    {
+      "timestamp": "2025-11-13T13:39:37.105701",
+      "response_type": "note_summary",
+      "content": "During the hypertension follow-up appointment, the patient's blood pressure has improved compared to the last visit. The doctor advised continuing the current medication (Ibuprofen and Aspirin) as prescribed. Additionally, the patient was recommended to engage in 30 minutes of walking for 5 days a week for better health. The next appointment is scheduled for 6 months from now.",
+      "source": "summarize-doctor-note"
+    },
+    {
+      "timestamp": "2025-11-13T13:45:38.495259",
+      "response_type": "medication",
+      "content": "Added 2 meds",
+      "source": "add-medications"
+    },
+    {
+      "timestamp": "2025-11-13T13:45:54.282016",
+      "response_type": "medication",
+      "content": "Interaction check for meds=['Ibuprofen', 'Aspirin'] -> 1 hits",
+      "source": "check-medication-interactions"
+    },
+    {
+      "timestamp": "2025-11-13T13:46:15.416031",
+      "response_type": "appointment",
+      "content": "Booked Cardiologist follow-up from 2025-11-20T09:00:00 to 2025-11-20T09:30:00",
+      "source": "book-appointment"
+    },
+    {
+      "timestamp": "2025-11-13T13:48:48.244144",
+      "response_type": "note_summary",
+      "content": "During the hypertension follow-up appointment, the patient's blood pressure has improved compared to the last visit. The doctor advised that the current medication regimen should continue. Additionally, the patient was recommended to walk for 30 minutes, five times a week for better health. The next visit is scheduled in 6 months.",
+      "source": "summarize-doctor-note"
     }
   ]
 }
