@@ -1,0 +1,180 @@
+{
+  "user_id": "AI_ML_dht_data_001",
+  "notes": [
+    {
+      "timestamp": "2025-11-28T00:24:02.479593",
+      "text": "Patient reports feeling more energetic after adjusting diet and following prescribed medications. No new symptoms observed. Planning to continue current routine and monitor blood glucose levels daily."
+    }
+  ],
+  "health_history": [
+    {
+      "condition": "Diabetes",
+      "diagnosis_date": "20.10.2023",
+      "status": "active",
+      "notes": "Mild condition, managed with Diabetes medications."
+    }
+  ],
+  "surgeries": [
+    {
+      "name": "Cataract Surgery",
+      "date": "10.04.2024",
+      "notes": "Routine cataract removal. Mild procedure, commonly required in diabetic patients. Recovery was smooth with no complications."
+    }
+  ],
+  "family_history": [
+    {
+      "relation": "Father",
+      "condition": "Type 2 Diabetes",
+      "notes": "Father diagnosed in his mid-50s; condition managed with oral medications."
+    }
+  ],
+  "ingested_items": [
+    {
+      "timestamp": "2025-11-27T23:52:02.825708",
+      "source": "fake_lab_report.JPG",
+      "text": "Patient Name: John Doe\nDate of Birth: 1990-05-14\nPatient ID: 123456789\nDoctor: Dr. Alice Smith\nDate: 2025-10-02\n\nTest Ordered: Complete Blood Count (CBC)\n\nResults:\n\n- Hemoglobin: 14.2 g/dL (Normal range: 13.5-17.5)\n\n- WBC Count: 6,500 cells/mcL (Normal range: 4,000-—1 1,000)\n\n- Platelets: 220,000 per mcL (Normal range: 150,000—450,000)\n- Hematocrit: 42% (Normal range: 38.8-50.0%)\n\nImpression:\nCBC results within normal limits. No immediate action required.\n\nRecommendations:\nMaintain a healthy diet and hydration.\nFollow-up in 6 months unless new symptoms arise.\n"
+    },
+    {
+      "timestamp": "2025-11-27T23:53:02.135290",
+      "source": "fake_lab_report.JPG",
+      "text": "Patient Name: John Doe\nDate of Birth: 1990-05-14\nPatient ID: 123456789\nDoctor: Dr. Alice Smith\nDate: 2025-10-02\n\nTest Ordered: Complete Blood Count (CBC)\n\nResults:\n\n- Hemoglobin: 14.2 g/dL (Normal range: 13.5-17.5)\n\n- WBC Count: 6,500 cells/mcL (Normal range: 4,000-—1 1,000)\n\n- Platelets: 220,000 per mcL (Normal range: 150,000—450,000)\n- Hematocrit: 42% (Normal range: 38.8-50.0%)\n\nImpression:\nCBC results within normal limits. No immediate action required.\n\nRecommendations:\nMaintain a healthy diet and hydration.\nFollow-up in 6 months unless new symptoms arise.\n"
+    }
+  ],
+  "wearables": [
+    {
+      "timestamp": "2025-11-27T20:35:13.578000Z",
+      "steps": 6421,
+      "heart_rate": 78.0,
+      "sleep_hours": 6.8
+    },
+    {
+      "timestamp": "2025-11-27T20:35:13.578000Z",
+      "steps": 8000,
+      "heart_rate": 65.0,
+      "sleep_hours": 7.5
+    }
+  ],
+  "predictions": [
+    {
+      "condition": "Type 2 Diabetes",
+      "risk_score": 0.5,
+      "explanation": "Risk for Type 2 Diabetes computed."
+    },
+    {
+      "condition": "High Blood Pressure",
+      "risk_score": 0.3,
+      "explanation": "Risk for High Blood Pressure computed."
+    }
+  ],
+  "medications": [
+    {
+      "name": "Metformin",
+      "dosage": "500 mg",
+      "schedule": "Twice daily",
+      "start_date": "2024-01-10",
+      "end_date": "2024-12-10",
+      "notes": "Taken with meals to manage blood glucose levels."
+    },
+    {
+      "name": "Glimepiride",
+      "dosage": "2 mg",
+      "schedule": "Once daily",
+      "start_date": "2024-02-01",
+      "end_date": "2024-12-01",
+      "notes": "Helps increase insulin release; taken once daily before breakfast."
+    }
+  ],
+  "appointments": [
+    {
+      "id": "appt-1-1764285176",
+      "title": "Routine Follow-Up Checkup",
+      "start_time": "2025-11-27T19:20:20.266000Z",
+      "end_time": "2025-11-27T19:20:25.266000Z",
+      "location": "City Health Clinic - Room 204",
+      "notes": "Regular follow-up visit to review ongoing medications and general health status.",
+      "created_at": "2025-11-28T00:12:56.641055"
+    }
+  ],
+  "doctor_notes": [
+    {
+      "timestamp": "2025-11-28T00:13:55.002092",
+      "raw_text": "Patient visited for routine follow-up. Reports good adherence to medications. Mild fatigue noted but no acute concerns. Physical exam was normal. Doctor advised continuing current treatment plan and scheduled a follow-up in three months.",
+      "summary": "The patient had a routine follow-up appointment. They reported good adherence to their diabetes medications (Metformin and Glimepiride). The doctor noted mild fatigue but no acute concerns. The physical exam was normal, and the current treatment plan was advised to continue. A follow-up appointment is scheduled in three months.",
+      "visit_type": "doctor"
+    }
+  ],
+  "logs": [
+    {
+      "timestamp": "2025-11-27T23:52:47.552744",
+      "response_type": "summary",
+      "content": "The CBC test results for John Doe, born on May 14, 1990, with Patient ID 123456789, show that his hemoglobin, white blood cell count (WBC), and platelet levels are within the normal range. The hematocrit level is slightly elevated at 42%, but still within the normal range of 38.8-50.0%.\n\nDr. Alice Smith's impression is that there are no immediate concerns based on these test results, and no action is required at this time.\n\nRecommendations for John Doe include maintaining a healthy diet and hydration, with a follow-up appointment scheduled in 6 months unless new symptoms arise. It is important to remember that this summary does not replace professional medical advice, and users should consult their clinician for personalized guidance.",
+      "source": "ingest:fake_lab_report.JPG"
+    },
+    {
+      "timestamp": "2025-11-27T23:59:02.482818",
+      "response_type": "summary",
+      "content": "The CBC report for John Doe, born on May 14, 1990, shows that his hemoglobin level is slightly elevated at 14.2 g/dL (normal range: 13.5-17.5), but the white blood cell count and platelet levels are within normal limits (6,500 cells/mcL for WBC, normal range: 4,000-11,000; 220,000 per mcL for Platelets, normal range: 150,000—450,000). The hematocrit level is also within normal limits at 42% (normal range: 38.8-50.0%).\n\nThe doctor's impression is that the CBC results are within normal limits and no immediate action is required. Recommendations include maintaining a healthy diet and hydration, with a follow-up appointment in 6 months unless new symptoms arise. It is important to consult with a healthcare professional for personalized medical advice.",
+      "source": "upload:fake_lab_report.JPG|type:lab_report"
+    },
+    {
+      "timestamp": "2025-11-28T00:08:19.570081",
+      "response_type": "medication",
+      "content": "Added 2 meds",
+      "source": "add-medications"
+    },
+    {
+      "timestamp": "2025-11-28T00:09:32.450736",
+      "response_type": "medication",
+      "content": "Interaction check for meds=['Metformin', 'Glimepiride'] -> 0 hits",
+      "source": "check-medication-interactions"
+    },
+    {
+      "timestamp": "2025-11-28T00:11:17.149699",
+      "response_type": "prediction",
+      "content": "[{'condition': 'Type 2 Diabetes', 'risk_score': 0.5, 'explanation': 'Risk for Type 2 Diabetes computed.'}, {'condition': 'High Blood Pressure', 'risk_score': 0.3, 'explanation': 'Risk for High Blood Pressure computed.'}]",
+      "source": "predict-risk"
+    },
+    {
+      "timestamp": "2025-11-28T00:11:55.863190",
+      "response_type": "prediction",
+      "content": "{'steps': 7210, 'heart_rate': 71.5, 'sleep_hours': 7.2}",
+      "source": "forecast-wearables"
+    },
+    {
+      "timestamp": "2025-11-28T00:12:56.664819",
+      "response_type": "appointment",
+      "content": "Booked Routine Follow-Up Checkup from 2025-11-27T19:20:20.266000+00:00 to 2025-11-27T19:20:25.266000+00:00",
+      "source": "book-appointment"
+    },
+    {
+      "timestamp": "2025-11-28T00:13:55.024104",
+      "response_type": "note_summary",
+      "content": "The patient had a routine follow-up appointment. They reported good adherence to their diabetes medications (Metformin and Glimepiride). The doctor noted mild fatigue but no acute concerns. The physical exam was normal, and the current treatment plan was advised to continue. A follow-up appointment is scheduled in three months.",
+      "source": "summarize-doctor-note"
+    },
+    {
+      "timestamp": "2025-11-28T00:20:50.165493",
+      "response_type": "ask_answer",
+      "content": "As a health assistant, it's important to note that I am not a doctor and cannot provide specific medical advice. However, I can share some general information about taking Metformin and exercise.\n\nMetformin is a medication commonly used to manage type 2 diabetes by helping to lower blood sugar levels. Exercise is also beneficial for managing diabetes as it helps improve insulin sensitivity and reduce blood glucose levels.\n\nIt's generally safe to take Metformin before exercising, but it's important to follow your healthcare provider's instructions regarding dosage and timing. Some people may experience gastrointestinal side effects such as nausea or diarrhea when taking Metformin, which can be exacerbated by exercise.\n\nIf you are experiencing any side effects or have concerns about taking Metformin before exercising, it's important to speak with your healthcare provider for personalized medical advice. They can help determine the best dosage and timing for you based on your individual health needs and exercise routine.",
+      "source": "ask:Can I safely take my Metformin before exercise, or should I adjust my dosage?"
+    },
+    {
+      "timestamp": "2025-11-28T00:22:51.075192",
+      "response_type": "followup_questions",
+      "content": "1. \"What is the current status of my HbA1c levels, and are they within the target range for managing diabetes effectively?\"\n2. \"Given my family history of Type 2 Diabetes, what additional lifestyle changes or preventative measures should I consider to reduce my risk?\"\n3. \"My blood pressure readings have been slightly elevated in recent wearable records. Could you explain this trend and suggest any necessary adjustments to my medication or lifestyle?\"\n4. \"Since my cataract surgery, have there been any potential complications that could affect my diabetes management or vice versa?\"\n5. \"Given the mild fatigue I've been experiencing, could it be related to my diabetes or medications? If so, are there alternative treatments or adjustments we can consider?\"\n6. \"What is the recommended frequency for follow-up appointments, considering my current health status and ongoing management of both diabetes and cataracts?\"\n7. \"Are there any new advancements in diabetes treatment that could potentially improve my condition or make management easier?\"\n8. \"Given the predicted risk of developing High Blood Pressure, what steps can I take to lower this risk and maintain optimal health?\"",
+      "source": "suggest-followup"
+    },
+    {
+      "timestamp": "2025-11-28T00:28:12.253745",
+      "response_type": "qr",
+      "content": "QR generated scope=clinician_view",
+      "source": "generate-dht-qr"
+    },
+    {
+      "timestamp": "2025-11-28T00:30:30.279098",
+      "response_type": "qr",
+      "content": "QR decoded scope=clinician_view",
+      "source": "decode-dht-token"
+    }
+  ]
+}
