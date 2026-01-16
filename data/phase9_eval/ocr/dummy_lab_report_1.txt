@@ -1,0 +1,21 @@
+CityCare Diagnostics
+Complete Blood Count (CBC) Report
+SYNTHETIC DUMMY REPORT FOR TESTING ONLY.
+Patient: Amina H. | ID: CC-104233
+DOB: 1996-03-18 | Sex: F
+Collected: 2025-12-20 08:15 | Reported: 2025-12-20 14:05
+Ordering Clinician: Dr. K. Schneider
+
+RESULTS
+WBC: 7.2 x10^9/L (Ref 4.0–11.0)
+RBC: 4.48 x10^12/L (Ref 3.80–5.20)
+Hemoglobin: 11.2 g/dL (Ref 12.0–15.5) [L]
+Hematocrit: 34.6 % (Ref 36.0–46.0) [L]
+Platelets: 265 x10^9/L (Ref 150–400)
+MCV: 77.2 fL (Ref 80.0–100.0) [L]
+
+NOTES
+Mild microcytic anemia pattern (low Hb/MCV). Consider correlation with iron studies if clinically indicated.
+
+Specimen Type: Whole blood (EDTA)
+Specimen Condition: Acceptable

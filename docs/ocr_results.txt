@@ -1,0 +1,15 @@
+OCR/Text Extraction Evaluation (CER/WER)
+
+Dataset: 3 synthetic lab-report PDFs (dummy_lab_report_1..3)
+Metric: Character Error Rate (CER) and Word Error Rate (WER)
+
+Results:
+dummy_lab_report_1  CER 0.5760  WER 0.7312
+dummy_lab_report_2  CER 0.5922  WER 0.7500
+dummy_lab_report_3  CER 0.5903  WER 0.7500
+AVG                CER 0.5861  WER 0.7437
+
+Notes:
+- Scores are impacted by formatting/layout differences (tables, headers, line breaks) between
+  extracted text and ground-truth formatting. This evaluation pipeline is ready to reuse when
+  production OCR/layout parsing is integrated; next improvement is text normalization before scoring.

@@ -1,0 +1,7 @@
+"ingested_items": [
+    {
+      "timestamp": "2026-01-12T17:03:29.710973",
+      "source": "dummy_lab_report_1.pdf",
+      "text": "CityCare Diagnostics\nComplete Blood Count (CBC) Report\nNOTE: This is a synthetic/dummy lab report created for testing only (not medical advice).\nPatient: Amina H. ID: CC-104233\nDOB: 1996-03-18 Sex: F\nCollected: 2025-12-20 08:15 Reported: 2025-12-20 14:05\nOrdering Clinician: Dr. K. Schneider\nResults\nTest Result Units Reference Range Flag\nWBC 7.2 x10^9/L 4.0–11.0\nRBC 4.48 x10^12/L 3.80–5.20\nHemoglobin 11.2 g/dL 12.0–15.5 L\nHematocrit 34.6 % 36.0–46.0 L\nPlatelets 265 x10^9/L 150–400\nMCV 77.2 fL 80.0–100.0 L\nInterpretation / Notes\nMild microcytic anemia pattern (low Hb/MCV). Consider correlation with iron studies if clinically indicated.\nSpecimen\nType: Whole blood (EDTA) Condition: Acceptable"
+    }
+]

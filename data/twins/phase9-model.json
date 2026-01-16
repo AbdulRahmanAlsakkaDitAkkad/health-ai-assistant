@@ -1,0 +1,49 @@
+{
+  "user_id": "phase9-model",
+  "notes": [],
+  "health_history": [],
+  "surgeries": [],
+  "family_history": [
+    {
+      "relation": "father",
+      "condition": "diabetes",
+      "notes": "type 2"
+    }
+  ],
+  "ingested_items": [],
+  "wearables": [],
+  "predictions": [
+    {
+      "condition": "diabetes",
+      "risk_score": 0.5,
+      "explanation": "Risk for diabetes computed."
+    },
+    {
+      "condition": "diabetes",
+      "risk_score": 0.5,
+      "explanation": "Risk for diabetes computed."
+    }
+  ],
+  "medications": [],
+  "appointments": [],
+  "doctor_notes": [],
+  "mood_logs": [],
+  "emotion_analysis": [],
+  "mental_health_summaries": [],
+  "mental_health_insights": [],
+  "coherence_recommendations": [],
+  "logs": [
+    {
+      "timestamp": "2026-01-12T16:45:15.364132",
+      "response_type": "prediction",
+      "content": "[{'condition': 'diabetes', 'risk_score': 0.5, 'explanation': 'Risk for diabetes computed.'}]",
+      "source": "predict-risk"
+    },
+    {
+      "timestamp": "2026-01-12T18:18:05.834602",
+      "response_type": "prediction",
+      "content": "[{'condition': 'diabetes', 'risk_score': 0.5, 'explanation': 'Risk for diabetes computed.'}]",
+      "source": "predict-risk"
+    }
+  ]
+}

@@ -33,7 +33,21 @@ from assistant.schema.dht_models import (
     MedicationItem,
     AppointmentItem,
     DoctorNote,
+    # ---- Phase 8 models (NEW) ----
+    MoodLogEntry,
+    EmotionAnalysisEntry,
+    MentalHealthDailySummary,
+    CoherenceRecommendationEntry,
 )
+
+# ---- Phase 8 mental health helpers (NEW) ----
+from assistant.mental.phase8_dht import (
+    add_mood_to_dht,
+    analyze_mood_text,
+    daily_mental_summary,
+    recommend_relaxation,
+    safety_message,
+) 
 
 # --- Phase 6 security + QR imports ---
 from assistant.security.crypto import encrypt_bytes, decrypt_bytes
@@ -43,7 +57,7 @@ from assistant.share.qr_utils import make_qr_png_base64
 from assistant.share.ics_utils import build_ics_event
 
 # ---- FastAPI app ----
-app = FastAPI(title="Private Health LLM", version="0.7.0 - Phase6+7 Integrations")
+app = FastAPI(title="Private Health LLM", version="0.8.0 - Phase8 Mental Health")
 
 app.add_middleware(
     CORSMiddleware,
@@ -649,4 +663,135 @@ def summarize_doctor_note(req: DoctorNoteUploadRequest):
         user_id=req.user_id,
         summary=summary_text,
         bullets=bullets,
+    )
+
+
+# -----------------------------------------
+# Phase 8 – Mental Health & Coherence Intelligence (NEW)
+# -----------------------------------------
+class AddMoodReq(BaseModel):
+    user_id: Optional[str] = None
+    mood_type: str
+    note: Optional[str] = None
+    emoji: Optional[str] = None
+
+
+class AddMoodRes(BaseModel):
+    status: str
+    user_id: str
+    entry: MoodLogEntry
+
+
+@app.post("/add-mood", response_model=AddMoodRes, tags=["Phase 8 - Mental Health"])
+def add_mood(req: AddMoodReq) -> AddMoodRes:
+    user_id = req.user_id or "demo"
+    entry = add_mood_to_dht(
+        user_id=user_id,
+        mood_type=req.mood_type,
+        note=req.note,
+        emoji=req.emoji,
+    )
+    DigitalTwinManager(user_id).log_event("mental_mood", content=f"{req.mood_type}", source="/add-mood")
+    return AddMoodRes(status="success", user_id=user_id, entry=entry)
+
+
+class AnalyzeMoodReq(BaseModel):
+    user_id: Optional[str] = None
+    text: str
+
+
+class AnalyzeMoodRes(BaseModel):
+    status: str
+    user_id: str
+    analysis: EmotionAnalysisEntry
+    safety_message: Optional[str] = None
+
+
+@app.post("/analyze-mood", response_model=AnalyzeMoodRes, tags=["Phase 8 - Mental Health"])
+def analyze_mood(req: AnalyzeMoodReq) -> AnalyzeMoodRes:
+    user_id = req.user_id or "demo"
+    analysis = analyze_mood_text(user_id=user_id, text=req.text, llm=llm)
+    DigitalTwinManager(user_id).log_event("mental_analysis", content=analysis.sentiment, source="/analyze-mood")
+    return AnalyzeMoodRes(
+        status="success",
+        user_id=user_id,
+        analysis=analysis,
+        safety_message=safety_message(analysis.safety_flag),
+    )
+
+
+class DailyMentalSummaryReq(BaseModel):
+    user_id: Optional[str] = None
+    date: Optional[str] = None  # "YYYY-MM-DD" (UTC) or ISO datetime
+
+
+class DailyMentalSummaryRes(BaseModel):
+    status: str
+    user_id: str
+    summary: MentalHealthDailySummary
+    safety_message: Optional[str] = None
+
+
+@app.post("/daily-mental-summary", response_model=DailyMentalSummaryRes, tags=["Phase 8 - Mental Health"])
+def daily_summary(req: DailyMentalSummaryReq) -> DailyMentalSummaryRes:
+    user_id = req.user_id or "demo"
+    summary = daily_mental_summary(user_id=user_id, date_str=req.date, llm=llm)
+    DigitalTwinManager(user_id).log_event("mental_daily_summary", content=summary.summary, source="/daily-mental-summary")
+    return DailyMentalSummaryRes(
+        status="success",
+        user_id=user_id,
+        summary=summary,
+        safety_message=safety_message(summary.safety_flag),
+    )
+
+
+class WearableTrendsIn(BaseModel):
+    steps: Optional[int] = None
+    heart_rate: Optional[float] = None
+    sleep_hours: Optional[float] = None
+
+
+class RecommendRelaxationReq(BaseModel):
+    user_id: Optional[str] = None
+    goal: Optional[str] = None  # e.g. "calm" | "sleep" | "focus"
+    wearable: Optional[WearableTrendsIn] = None
+
+
+class RecommendRelaxationRes(BaseModel):
+    status: str
+    user_id: str
+    recommendation: CoherenceRecommendationEntry
+    safety_message: Optional[str] = None
+
+
+@app.post("/recommend-relaxation", response_model=RecommendRelaxationRes, tags=["Phase 8 - Mental Health"])
+def recommend(req: RecommendRelaxationReq) -> RecommendRelaxationRes:
+    user_id = req.user_id or "demo"
+
+    # Optional: attach a wearable snapshot provided "today" (additive)
+    if req.wearable is not None and any(
+        x is not None for x in (req.wearable.steps, req.wearable.heart_rate, req.wearable.sleep_hours)
+    ):
+        dt = DigitalTwinManager(user_id)
+        twin = dt.twin
+        twin.wearables.append(
+            WearableRecord(
+                steps=req.wearable.steps,
+                heart_rate=req.wearable.heart_rate,
+                sleep_hours=req.wearable.sleep_hours,
+            )
+        )
+        save_twin(twin)
+
+    rec = recommend_relaxation(user_id=user_id, goal=req.goal, llm=llm)
+    DigitalTwinManager(user_id).log_event(
+        "mental_recommendation",
+        content=rec.rationale or "",
+        source="/recommend-relaxation",
+    )
+    return RecommendRelaxationRes(
+        status="success",
+        user_id=user_id,
+        recommendation=rec,
+        safety_message=safety_message(rec.safety_flag),
     )

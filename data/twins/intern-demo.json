@@ -1,0 +1,45 @@
+{
+  "user_id": "intern-demo",
+  "notes": [],
+  "health_history": [],
+  "surgeries": [],
+  "family_history": [],
+  "ingested_items": [],
+  "wearables": [],
+  "predictions": [],
+  "medications": [],
+  "appointments": [],
+  "doctor_notes": [],
+  "mood_logs": [],
+  "emotion_analysis": [
+    {
+      "timestamp": "2025-12-25T13:37:21.069290",
+      "text": "Today felt overwhelming. I couldn't focus and I kept worrying about messing up.",
+      "sentiment": "negative",
+      "emotional_categories": [
+        "stress",
+        "anxiety"
+      ],
+      "suggested_reflection": "It sounds like you're feeling overwhelmed today. It's important to remember that everyone has days like this, and it's okay to ask for help or take a break when needed.",
+      "safety_flag": "none",
+      "source": "llm"
+    }
+  ],
+  "mental_health_summaries": [],
+  "mental_health_insights": [],
+  "coherence_recommendations": [],
+  "logs": [
+    {
+      "timestamp": "2025-12-25T13:37:21.934645",
+      "response_type": "mental_analysis",
+      "content": "negative | stress, anxiety",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2025-12-25T13:37:21.974424",
+      "response_type": "mental_analysis",
+      "content": "negative",
+      "source": "/analyze-mood"
+    }
+  ]
+}

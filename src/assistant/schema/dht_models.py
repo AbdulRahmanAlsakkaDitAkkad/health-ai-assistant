@@ -14,13 +14,13 @@ class UserNote(BaseModel):
 class HealthHistoryItem(BaseModel):
     condition: str
     diagnosis_date: Optional[str] = None  # e.g. "2022-05-01" or "2022-05"
-    status: Optional[Literal["active", "resolved", "unknown"]] = "active"
+    status: Optional[str] = "active"      # active, resolved, etc
     notes: Optional[str] = None
 
 
 class SurgeryItem(BaseModel):
     name: str
-    date: Optional[str] = None
+    date: Optional[str] = None            # e.g. "2021-06-10"
     notes: Optional[str] = None
 
 
@@ -78,6 +78,55 @@ class DoctorNote(BaseModel):
     visit_type: Optional[Literal["doctor", "therapist", "other"]] = None
 
 
+# ---------- Phase 8: Mental Health & Coherence Intelligence ----------
+class MoodLogEntry(BaseModel):
+    """User-submitted mood entry (non-clinical)."""
+
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    mood_type: str  # e.g. "happy" | "stressed" | "anxious" | "neutral" | "tired"
+    note: Optional[str] = None
+    emoji: Optional[str] = None
+
+
+class EmotionAnalysisEntry(BaseModel):
+    """Structured interpretation of a mood/note (LLM or heuristic)."""
+
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    text: str
+    sentiment: Literal["positive", "neutral", "negative"]
+    emotional_categories: List[str] = Field(default_factory=list)
+    suggested_reflection: str
+    safety_flag: Literal["none", "concerning", "urgent"] = "none"
+    source: Literal["llm", "heuristic"] = "heuristic"
+
+
+class MentalHealthDailySummary(BaseModel):
+    """Per-day mental health summary (non-diagnostic)."""
+
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    date: str  # "YYYY-MM-DD"
+    summary: str
+    key_emotional_patterns: List[str] = Field(default_factory=list)
+    stress_triggers: List[str] = Field(default_factory=list)
+    recommended_actions: List[str] = Field(default_factory=list)
+    safety_flag: Literal["none", "concerning", "urgent"] = "none"
+    source: Literal["llm", "heuristic"] = "heuristic"
+
+
+class CoherenceRecommendationEntry(BaseModel):
+    """Relaxation & coherence recommendations that adapt to mood + wearable signals."""
+
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    goal: Optional[str] = None  # e.g. "calm" | "sleep" | "focus"
+    breathing_exercise: Optional[str] = None
+    audio_suggestion: Optional[str] = None
+    grounding_exercise: Optional[str] = None
+    light_routine: Optional[str] = None
+    rationale: Optional[str] = None
+    safety_flag: Literal["none", "concerning", "urgent"] = "none"
+    source: Literal["llm", "heuristic"] = "heuristic"
+
+
 # ---------- Logging / explainability ----------
 class LogEntry(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.utcnow)
@@ -90,6 +139,11 @@ class LogEntry(BaseModel):
         "medication",         # Phase 7 medication changes
         "appointment",        # Phase 7 appointment actions
         "note_summary",       # Phase 7 doctor/therapist note summaries
+        # Phase 8
+        "mental_mood",          # mood log
+        "mental_analysis",      # sentiment/emotion analysis
+        "mental_daily_summary", # daily mental summary
+        "mental_recommendation" # relaxation/coherence recommendations
     ]
     content: str
     source: Optional[str] = None  # e.g., "ingest:report.pdf", "ask:<question>"
@@ -114,6 +168,14 @@ class DigitalHealthTwin(BaseModel):
     appointments: List[AppointmentItem] = Field(default_factory=list)
     doctor_notes: List[DoctorNote] = Field(default_factory=list)
 
+    # Phase 8 extensions
+    mood_logs: List[MoodLogEntry] = Field(default_factory=list)
+    emotion_analysis: List[EmotionAnalysisEntry] = Field(default_factory=list)
+    mental_health_summaries: List[MentalHealthDailySummary] = Field(default_factory=list)
+    # Alias section requested by roadmap (stored redundantly for compatibility)
+    mental_health_insights: List[MentalHealthDailySummary] = Field(default_factory=list)
+    coherence_recommendations: List[CoherenceRecommendationEntry] = Field(default_factory=list)
+    
     # Explainability / trace
     logs: List[LogEntry] = Field(default_factory=list)
 
@@ -127,29 +189,24 @@ class DigitalHealthTwin(BaseModel):
                 for h in self.health_history[-10:]
             )
             parts.append(f"Health history: {hh}")
-
-        if self.surgeries:
-            su = "; ".join(
-                f"{s.name}" + (f"@{s.date}" if s.date else "")
-                for s in self.surgeries[-6:]
-            )
-            parts.append(f"Surgeries: {su}")
-
+  
         if self.family_history:
-            fh = "; ".join(
-                f"{f.relation}:{f.condition}"
-                for f in self.family_history[-10:]
-            )
-            parts.append(f"Family history: {fh}")
-
+            fh = "; ".join(f"{f.relation}:{f.condition}" for f in self.family_history[-10:])
+            parts.append(f"Family: {fh}")
+            
+        if self.surgeries:
+            sx = "; ".join(s.name for s in self.surgeries[-10:])
+            parts.append(f"Surgeries: {sx}")
+            
         if self.medications:
-            meds = "; ".join(m.name for m in self.medications[-5:])
-            parts.append(f"Medications: {meds}")
+            meds = "; ".join(m.name for m in self.medications[-10:])
+            parts.append(f"Meds: {meds}")
 
         if self.appointments:
-            # Just show the latest appointment title + time
-            latest_appt = sorted(self.appointments, key=lambda a: a.start_time)[-1]
-            parts.append(f"Last appointment: {latest_appt.title} @ {latest_appt.start_time.isoformat()}")
+            parts.append(f"Appointments: {min(len(self.appointments), 20)}")
+
+        if self.doctor_notes:
+            parts.append(f"Doctor notes: {min(len(self.doctor_notes), 20)}")
 
         if self.notes:
             last_notes = " | ".join(n.text.strip().replace("\n", " ") for n in self.notes[-5:])
@@ -164,6 +221,27 @@ class DigitalHealthTwin(BaseModel):
         if self.predictions:
             preds = "; ".join(f"{p.condition}:{p.risk_score:.2f}" for p in self.predictions[-5:])
             parts.append(f"Predictions: {preds}")
+
+        # Phase 8 mental context (keep compact)
+        if self.mood_logs:
+            last = self.mood_logs[-1]
+            mood_bits = [last.mood_type]
+            if last.emoji:
+                mood_bits.append(last.emoji)
+            if last.note:
+                mood_bits.append(last.note.strip().replace("\n", " ")[:140])
+            parts.append("Latest mood: " + " ".join(mood_bits))
+
+        # Prefer the most recent daily summary/insight if present
+        latest_summaries: List[MentalHealthDailySummary] = []
+        if self.mental_health_insights:
+            latest_summaries = self.mental_health_insights
+        elif self.mental_health_summaries:
+            latest_summaries = self.mental_health_summaries
+
+        if latest_summaries:
+            last_sum = latest_summaries[-1]
+            parts.append("Mental summary: " + last_sum.summary.strip().replace("\n", " ")[:220])
 
         ctx = " | ".join(parts) if parts else "No significant prior data."
         return ctx[:max_chars]

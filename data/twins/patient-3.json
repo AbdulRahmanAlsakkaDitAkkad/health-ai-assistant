@@ -1,0 +1,32 @@
+{
+  "user_id": "patient-3",
+  "notes": [],
+  "health_history": [],
+  "surgeries": [],
+  "family_history": [],
+  "ingested_items": [
+    {
+      "timestamp": "2026-01-12T17:15:13.377596",
+      "source": "dummy_lab_report_3.pdf",
+      "text": "GreenValley Clinic Lab\nLipid Panel Report\nNOTE: This is a synthetic/dummy lab report created for testing only (not medical advice).\nPatient: Sara M. ID: GV-772014\nDOB: 1979-06-11 Sex: F\nCollected: 2025-12-22 07:55 Reported: 2025-12-22 13:30\nOrdering Clinician: Dr. J. Weber\nResults\nTest Result Units Reference Range Flag\nTotal Cholesterol 228 mg/dL < 200 H\nLDL (calculated) 152 mg/dL < 100 H\nHDL 52 mg/dL >= 50\nTriglycerides 168 mg/dL < 150 H\nNon-HDL Cholesterol 176 mg/dL < 130 H\nInterpretation / Notes\nAtherogenic lipid profile (elevated LDL and triglycerides). Consider lifestyle optimization and follow\nclinician guidance.\nSpecimen\nType: Serum Condition: Slight hemolysis noted"
+    }
+  ],
+  "wearables": [],
+  "predictions": [],
+  "medications": [],
+  "appointments": [],
+  "doctor_notes": [],
+  "mood_logs": [],
+  "emotion_analysis": [],
+  "mental_health_summaries": [],
+  "mental_health_insights": [],
+  "coherence_recommendations": [],
+  "logs": [
+    {
+      "timestamp": "2026-01-12T17:16:47.500870",
+      "response_type": "summary",
+      "content": "The GreenValley Clinic Lab Lipid Panel Report for patient Sara M. (ID: GV-772014, DOB: 1979-06-11, Sex: F) shows the following results from a sample collected on 2025-12-22 and reported on 2025-12-22 13:30:\n\n* Total Cholesterol: 228 mg/dL (Reference Range: < 200 H)\n* LDL (calculated): 152 mg/dL (Reference Range: < 100 H)\n* HDL: 52 mg/dL (Reference Range: >= 50)\n* Triglycerides: 168 mg/dL (Reference Range: < 150 H)\n* Non-HDL Cholesterol: 176 mg/dL (Reference Range: < 130 H)\n\nThe report notes an atherogenic lipid profile, which means that both LDL and triglycerides are elevated. The interpretation suggests",
+      "source": "upload:dummy_lab_report_3.pdf|type:lab_report"
+    }
+  ]
+}

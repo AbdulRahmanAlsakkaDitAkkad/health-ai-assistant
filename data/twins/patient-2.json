@@ -1,0 +1,32 @@
+{
+  "user_id": "patient-2",
+  "notes": [],
+  "health_history": [],
+  "surgeries": [],
+  "family_history": [],
+  "ingested_items": [
+    {
+      "timestamp": "2026-01-12T17:11:26.893999",
+      "source": "dummy_lab_report_2.pdf",
+      "text": "NorthLab Medical Services\nBasic Metabolic Panel (BMP) Report\nNOTE: This is a synthetic/dummy lab report created for testing only (not medical advice).\nPatient: Omar S. ID: NL-550981\nDOB: 1988-09-02 Sex: M\nCollected: 2025-12-21 09:40 Reported: 2025-12-21 16:10\nOrdering Clinician: Dr. L. Fischer\nResults\nTest Result Units Reference Range Flag\nGlucose (fasting) 112 mg/dL 70–99 H\nSodium 139 mmol/L 135–145\nPotassium 4.3 mmol/L 3.5–5.1\nCreatinine 1.08 mg/dL 0.74–1.35\nBUN 18 mg/dL 7–20\nCalcium 9.1 mg/dL 8.6–10.2\nInterpretation / Notes\nFasting glucose is mildly elevated. Repeat fasting glucose or consider HbA1c depending on clinical\ncontext.\nSpecimen\nType: Serum Condition: Acceptable"
+    }
+  ],
+  "wearables": [],
+  "predictions": [],
+  "medications": [],
+  "appointments": [],
+  "doctor_notes": [],
+  "mood_logs": [],
+  "emotion_analysis": [],
+  "mental_health_summaries": [],
+  "mental_health_insights": [],
+  "coherence_recommendations": [],
+  "logs": [
+    {
+      "timestamp": "2026-01-12T17:13:17.468910",
+      "response_type": "summary",
+      "content": "The Basic Metabolic Panel (BMP) report for patient Omar S. with ID NL-550981, born in 1988 and male, shows the following results:\n\n1. Glucose (fasting): 112 mg/dL (mildly elevated)\n2. Sodium: 139 mmol/L (within reference range)\n3. Potassium: 4.3 mmol/L (within reference range)\n4. Creatinine: 1.08 mg/dL (slightly above the upper limit of the reference range)\n5. BUN: 18 mg/dL (within reference range)\n6. Calcium: 9.1 mg/dL (within reference range)\n\nThe report suggests repeating the fasting glucose test or considering an HbA1c test based on the clinical context due to the mildly elevated glucose level. The specimen type was serum and the condition was acceptable. It is important to consult with a healthcare professional for personalized medical advice.",
+      "source": "upload:dummy_lab_report_2.pdf|type:lab_report"
+    }
+  ]
+}

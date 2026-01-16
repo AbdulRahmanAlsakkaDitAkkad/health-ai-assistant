@@ -1,0 +1,20 @@
+GreenValley Clinic Lab
+Lipid Panel Report
+SYNTHETIC DUMMY REPORT FOR TESTING ONLY.
+Patient: Sara M. | ID: GV-772014
+DOB: 1979-06-11 | Sex: F
+Collected: 2025-12-22 07:55 | Reported: 2025-12-22 13:30
+Ordering Clinician: Dr. J. Weber
+
+RESULTS
+Total Cholesterol: 228 mg/dL (Ref < 200) [H]
+LDL (calculated): 152 mg/dL (Ref < 100) [H]
+HDL: 52 mg/dL (Ref >= 50)
+Triglycerides: 168 mg/dL (Ref < 150) [H]
+Non-HDL Cholesterol: 176 mg/dL (Ref < 130) [H]
+
+NOTES
+Atherogenic lipid profile (elevated LDL and triglycerides). Consider lifestyle optimization and follow clinician guidance.
+
+Specimen Type: Serum
+Specimen Condition: Slight hemolysis noted

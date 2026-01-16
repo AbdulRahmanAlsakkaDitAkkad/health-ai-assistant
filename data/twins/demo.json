@@ -42,6 +42,16 @@
       "timestamp": "2025-10-17T19:08:56.773064",
       "source": "fake_lab_report.pdf",
       "text": "Patient Name: John Doe\nDate of Birth: 1990-05-14\nPatient ID: 123456789\nDoctor: Dr. Alice Smith\nDate: 2025-10-02\nTest Ordered: Complete Blood Count (CBC)\nResults:\n- Hemoglobin: 14.2 g/dL (Normal range: 13.5–17.5)\n- WBC Count: 6,500 cells/mcL (Normal range: 4,000–11,000)\n- Platelets: 220,000 per mcL (Normal range: 150,000–450,000)\n- Hematocrit: 42% (Normal range: 38.8–50.0%)\nImpression:\nCBC results within normal limits. No immediate action required.\nRecommendations:\nMaintain a healthy diet and hydration.\nFollow-up in 6 months unless new symptoms arise.\nDoctor Signature: ________________________"
+    },
+    {
+      "timestamp": "2025-12-24T16:12:55.163340",
+      "source": "fake_lab_report.pdf",
+      "text": "Patient Name: John Doe\nDate of Birth: 1990-05-14\nPatient ID: 123456789\nDoctor: Dr. Alice Smith\nDate: 2025-10-02\nTest Ordered: Complete Blood Count (CBC)\nResults:\n- Hemoglobin: 14.2 g/dL (Normal range: 13.5–17.5)\n- WBC Count: 6,500 cells/mcL (Normal range: 4,000–11,000)\n- Platelets: 220,000 per mcL (Normal range: 150,000–450,000)\n- Hematocrit: 42% (Normal range: 38.8–50.0%)\nImpression:\nCBC results within normal limits. No immediate action required.\nRecommendations:\nMaintain a healthy diet and hydration.\nFollow-up in 6 months unless new symptoms arise.\nDoctor Signature: ________________________"
+    },
+    {
+      "timestamp": "2025-12-24T16:14:44.053179",
+      "source": "fake_lab_report.JPG",
+      "text": "Patient Name: John Doe\nDate of Birth: 1990-05-14\nPatient ID: 123456789\nDoctor: Dr. Alice Smith\nDate: 2025-10-02\n\nTest Ordered: Complete Blood Count (CBC)\n\nResults:\n\n- Hemoglobin: 14.2 g/dL (Normal range: 13.5-17.5)\n\n- WBC Count: 6,500 cells/mcL (Normal range: 4,000-—1 1,000)\n\n- Platelets: 220,000 per mcL (Normal range: 150,000—450,000)\n- Hematocrit: 42% (Normal range: 38.8-50.0%)\n\nImpression:\nCBC results within normal limits. No immediate action required.\n\nRecommendations:\nMaintain a healthy diet and hydration.\nFollow-up in 6 months unless new symptoms arise.\n"
     }
   ],
   "wearables": [
@@ -104,7 +114,13 @@
       "steps": 9500,
       "heart_rate": 85.0,
       "sleep_hours": 7.0
-    }
+    },
+    { 
+      "timestamp": "2025-12-25T12:18:10.881592",
+      "steps": 3200,
+      "heart_rate": 92.0,
+      "sleep_hours": 5.4
+    }  
   ],
   "predictions": [
     {
@@ -224,6 +240,163 @@
       "raw_text": "Patient seen for hypertension follow-up. BP improved compared to last visit. Continue current medication. Recommend 30 minutes of walking 5 times per week. Schedule next visit in 6 months.",
       "summary": "During the hypertension follow-up appointment, the patient's blood pressure has improved compared to the last visit. The doctor advised that the current medication regimen should continue. Additionally, the patient was recommended to walk for 30 minutes, five times a week for better health. The next visit is scheduled in 6 months.",
       "visit_type": "doctor"
+    }
+  ],
+  "mood_logs": [
+    {
+      "timestamp": "2025-12-24T16:28:42.637122",
+      "mood_type": "stressed",
+      "note": "Had a tight deadline and felt overwhelmed during the afternoon.",
+      "emoji": "😣"
+    },
+    {
+      "timestamp": "2025-12-25T12:09:06.095847",
+      "mood_type": "tired",
+      "note": "Slept late and felt low energy in the morning.",
+      "emoji": "🥱"
+    }
+  ],
+  "emotion_analysis": [
+    {
+      "timestamp": "2025-12-25T12:11:00.153565",
+      "text": "Today felt overwhelming. I couldn't focus and I kept worrying about messing up.",
+      "sentiment": "negative",
+      "emotional_categories": [
+        "stress",
+        "anxiety"
+      ],
+      "suggested_reflection": "It sounds like you're feeling overwhelmed today. It's okay to have days like this. Try taking a short break, focusing on your breath, and then returning to your tasks. Remember, it's normal to make mistakes - they are opportunities for learning.",
+      "safety_flag": "none",
+      "source": "llm"
+    },
+    {
+      "timestamp": "2025-12-25T12:13:05.208434",
+      "text": "I felt calmer after a short walk and some deep breathing. It helped.",
+      "sentiment": "positive",
+      "emotional_categories": [
+        "relief",
+        "peace"
+      ],
+      "suggested_reflection": "It's great to hear that you found relief and peace through simple actions like a walk and deep breathing. Remember, taking care of your mental health is just as important as physical health.",
+      "safety_flag": "none",
+      "source": "llm"
+    },
+    {
+      "timestamp": "2025-12-25T12:30:44.030075",
+      "text": "I feel like I can't go on and I want to end my life.",
+      "sentiment": "negative",
+      "emotional_categories": [
+        "sadness",
+        "despair"
+      ],
+      "suggested_reflection": "It's okay to feel overwhelmed, but remember that there are people who care about you and want to help. Reach out to someone you trust or call a helpline if you need immediate support.",
+      "safety_flag": "urgent",
+      "source": "llm"
+    },
+    {
+      "timestamp": "2025-12-25T13:35:58.678450",
+      "text": "I feel like I can't go on and I want to end my life.",
+      "sentiment": "negative",
+      "emotional_categories": [
+        "sadness",
+        "despair"
+      ],
+      "suggested_reflection": "It's okay to feel overwhelmed, but remember that there are people who care about you and want to help. Reach out to someone you trust or call a helpline if you need immediate support.",
+      "safety_flag": "urgent",
+      "source": "llm"
+    }
+  ],
+  "mental_health_summaries": [
+    {
+      "timestamp": "2025-12-25T12:14:59.081814",
+      "date": "2025-12-25",
+      "summary": "The day started with low energy and feelings of being overwhelmed, but improved after a short walk and deep breathing.",
+      "key_emotional_patterns": [
+        "low energy",
+        "overwhelmed"
+      ],
+      "stress_triggers": [
+        "lack of focus",
+        "worrying about messing up"
+      ],
+      "recommended_actions": [
+        "prioritize rest and sleep",
+        "take short breaks to clear the mind",
+        "focus on one task at a time"
+      ],
+      "safety_flag": "none",
+      "source": "llm"
+    },
+    {
+      "timestamp": "2025-12-25T12:17:23.976927",
+      "date": "2025-12-24",
+      "summary": "Today was challenging due to a tight deadline causing feelings of overwhelm in the afternoon.",
+      "key_emotional_patterns": [
+        "stressed"
+      ],
+      "stress_triggers": [
+        "tight deadlines"
+      ],
+      "recommended_actions": [
+        "Take short breaks during work to avoid feeling overwhelmed",
+        "Prioritize tasks and break them down into smaller, manageable parts",
+        "Consider asking for an extension if the deadline is unrealistic"
+      ],
+      "safety_flag": "concerning",
+      "source": "llm"
+    }
+  ],
+  "mental_health_insights": [
+    {
+      "timestamp": "2025-12-25T12:14:59.081814",
+      "date": "2025-12-25",
+      "summary": "The day started with low energy and feelings of being overwhelmed, but improved after a short walk and deep breathing.",
+      "key_emotional_patterns": [
+        "low energy",
+        "overwhelmed"
+      ],
+      "stress_triggers": [
+        "lack of focus",
+        "worrying about messing up"
+      ],
+      "recommended_actions": [
+        "prioritize rest and sleep",
+        "take short breaks to clear the mind",
+        "focus on one task at a time"
+      ],
+      "safety_flag": "none",
+      "source": "llm"
+    },
+    {
+      "timestamp": "2025-12-25T12:17:23.976927",
+      "date": "2025-12-24",
+      "summary": "Today was challenging due to a tight deadline causing feelings of overwhelm in the afternoon.",
+      "key_emotional_patterns": [
+        "stressed"
+      ],
+      "stress_triggers": [
+        "tight deadlines"
+      ],
+      "recommended_actions": [
+        "Take short breaks during work to avoid feeling overwhelmed",
+        "Prioritize tasks and break them down into smaller, manageable parts",
+        "Consider asking for an extension if the deadline is unrealistic"
+      ],
+      "safety_flag": "concerning",
+      "source": "llm"
+    }
+  ],
+  "coherence_recommendations": [
+    {
+      "timestamp": "2025-12-25T12:19:42.865614",
+      "goal": "sleep",
+      "breathing_exercise": "4-7-8 breathing: inhale 4s, hold 7s, exhale 8s — repeat 4 cycles.",
+      "audio_suggestion": "Low-volume nature soundscape (rain/ocean) for 5–10 minutes.",
+      "grounding_exercise": "5-4-3-2-1 grounding: name 5 things you see, 4 feel, 3 hear, 2 smell, 1 taste.",
+      "light_routine": "Dim lights 30–60 minutes before sleep; avoid bright screens if possible.",
+      "rationale": "Sleep looks short, so a gentle wind-down may help. Fatigue signals suggest prioritizing rest and hydration.",
+      "safety_flag": "none",
+      "source": "heuristic"
     }
   ],
   "logs": [
@@ -382,6 +555,132 @@
       "response_type": "note_summary",
       "content": "During the hypertension follow-up appointment, the patient's blood pressure has improved compared to the last visit. The doctor advised that the current medication regimen should continue. Additionally, the patient was recommended to walk for 30 minutes, five times a week for better health. The next visit is scheduled in 6 months.",
       "source": "summarize-doctor-note"
+    },
+    {
+      "timestamp": "2025-12-24T16:08:28.047799",
+      "response_type": "ask_answer",
+      "content": "Symptoms of dehydration can vary depending on the severity and age of the individual, but common signs include:\n\n1. Dry mouth and throat\n2. Less frequent urination or dark-colored urine\n3. Fatigue and weakness\n4. Dizziness or lightheadedness\n5. Confusion or irritability\n6. Headache\n7. Rapid heartbeat\n8. Sunken eyes\n9. In severe cases, lack of tears when crying or extreme thirst.\n\nIt's essential to drink plenty of fluids to prevent dehydration, especially in hot weather, during physical activity, and for those who may be more susceptible, such as the elderly, infants, and individuals with certain medical conditions. If you suspect dehydration, it is crucial to seek medical attention promptly.",
+      "source": "ask:What are symptoms of dehydration?"
+    },
+    {
+      "timestamp": "2025-12-24T16:14:14.327263",
+      "response_type": "summary",
+      "content": "The medical report for John Doe, born on May 14, 1990 (Patient ID: 123456789), shows that his Complete Blood Count (CBC) results are within the normal range. Specifically, his Hemoglobin is 14.2 g/dL, White Blood Cell Count is 6,500 cells/mcL, Platelets count is 220,000 per mcL, and Hematocrit is 42%. Dr. Alice Smith has noted that no immediate action is required based on these results.\n\nRecommendations for John Doe include maintaining a healthy diet and hydration. A follow-up appointment is scheduled for six months from the date of this report, unless new symptoms arise. Please consult with your healthcare provider for personalized advice.",
+      "source": "ingest:fake_lab_report.pdf"
+    },
+    {
+      "timestamp": "2025-12-24T16:19:52.887891",
+      "response_type": "summary",
+      "content": "The CBC report for John Doe, born on May 14, 1990, shows that his hemoglobin level is slightly elevated at 14.2 g/dL (normal range: 13.5-17.5), but the white blood cell count and platelet levels are within normal limits (6,500 cells/mcL for WBC, normal range: 4,000-11,000; 220,000 per mcL for Platelets, normal range: 150,000—450,000). The hematocrit level is also within normal limits at 42% (normal range: 38.8-50.0%).\n\nThe doctor's impression is that the CBC results are within normal limits and no immediate action is required. Recommendations include maintaining a healthy diet and hydration, with a follow-up appointment in 6 months unless new symptoms arise. It is important to consult with a healthcare professional for personalized medical advice.",
+      "source": "upload:fake_lab_report.JPG|type:lab_report"
+    },
+    {
+      "timestamp": "2025-12-24T16:28:42.655258",
+      "response_type": "mental_mood",
+      "content": "stressed 😣 Had a tight deadline and felt overwhelmed during the afternoon.",
+      "source": "/add-mood"
+    },
+    {
+      "timestamp": "2025-12-24T16:28:42.697044",
+      "response_type": "mental_mood",
+      "content": "stressed",
+      "source": "/add-mood"
+    },
+    {
+      "timestamp": "2025-12-25T12:09:06.115815",
+      "response_type": "mental_mood",
+      "content": "tired 🥱 Slept late and felt low energy in the morning.",
+      "source": "/add-mood"
+    },
+    {
+      "timestamp": "2025-12-25T12:09:06.165143",
+      "response_type": "mental_mood",
+      "content": "tired",
+      "source": "/add-mood"
+    },
+    {
+      "timestamp": "2025-12-25T12:11:00.937231",
+      "response_type": "mental_analysis",
+      "content": "negative | stress, anxiety",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2025-12-25T12:11:01.140446",
+      "response_type": "mental_analysis",
+      "content": "negative",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2025-12-25T12:13:05.265232",
+      "response_type": "mental_analysis",
+      "content": "positive | relief, peace",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2025-12-25T12:13:05.415212",
+      "response_type": "mental_analysis",
+      "content": "positive",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2025-12-25T12:15:00.021004",
+      "response_type": "mental_daily_summary",
+      "content": "The day started with low energy and feelings of being overwhelmed, but improved after a short walk and deep breathing.",
+      "source": "/daily-mental-summary"
+    },
+    {
+      "timestamp": "2025-12-25T12:15:00.036816",
+      "response_type": "mental_daily_summary",
+      "content": "The day started with low energy and feelings of being overwhelmed, but improved after a short walk and deep breathing.",
+      "source": "/daily-mental-summary"
+    },
+    {
+      "timestamp": "2025-12-25T12:17:23.998715",
+      "response_type": "mental_daily_summary",
+      "content": "Today was challenging due to a tight deadline causing feelings of overwhelm in the afternoon.",
+      "source": "/daily-mental-summary"
+    },
+    {
+      "timestamp": "2025-12-25T12:17:24.018266",
+      "response_type": "mental_daily_summary",
+      "content": "Today was challenging due to a tight deadline causing feelings of overwhelm in the afternoon.",
+      "source": "/daily-mental-summary"
+    },
+    {
+      "timestamp": "2025-12-25T12:19:42.898559",
+      "response_type": "mental_recommendation",
+      "content": "Sleep looks short, so a gentle wind-down may help. Fatigue signals suggest prioritizing rest and hydration.",
+      "source": "/recommend-relaxation"
+    },
+    {
+      "timestamp": "2025-12-25T12:19:42.915144",
+      "response_type": "mental_recommendation",
+      "content": "Sleep looks short, so a gentle wind-down may help. Fatigue signals suggest prioritizing rest and hydration.",
+      "source": "/recommend-relaxation"
+    },
+    {
+      "timestamp": "2025-12-25T12:30:44.133197",
+      "response_type": "mental_analysis",
+      "content": "negative | sadness, despair",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2025-12-25T12:30:44.187472",
+      "response_type": "mental_analysis",
+      "content": "negative",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2025-12-25T13:35:59.726221",
+      "response_type": "mental_analysis",
+      "content": "negative | sadness, despair",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2025-12-25T13:35:59.873100",
+      "response_type": "mental_analysis",
+      "content": "negative",
+      "source": "/analyze-mood"
     }
   ]
 }

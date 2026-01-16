@@ -1,0 +1,219 @@
+{
+  "user_id": "phase9-llm",
+  "notes": [],
+  "health_history": [],
+  "surgeries": [],
+  "family_history": [],
+  "ingested_items": [
+    {
+      "timestamp": "2026-01-12T18:08:26.453256",
+      "source": "dummy_lab_report_1.pdf",
+      "text": "CityCare Diagnostics\nComplete Blood Count (CBC) Report\nNOTE: This is a synthetic/dummy lab report created for testing only (not medical advice).\nPatient: Amina H. ID: CC-104233\nDOB: 1996-03-18 Sex: F\nCollected: 2025-12-20 08:15 Reported: 2025-12-20 14:05\nOrdering Clinician: Dr. K. Schneider\nResults\nTest Result Units Reference Range Flag\nWBC 7.2 x10^9/L 4.0–11.0\nRBC 4.48 x10^12/L 3.80–5.20\nHemoglobin 11.2 g/dL 12.0–15.5 L\nHematocrit 34.6 % 36.0–46.0 L\nPlatelets 265 x10^9/L 150–400\nMCV 77.2 fL 80.0–100.0 L\nInterpretation / Notes\nMild microcytic anemia pattern (low Hb/MCV). Consider correlation with iron studies if clinically indicated.\nSpecimen\nType: Whole blood (EDTA) Condition: Acceptable"
+    }
+  ],
+  "wearables": [],
+  "predictions": [],
+  "medications": [],
+  "appointments": [],
+  "doctor_notes": [
+    {
+      "timestamp": "2026-01-12T17:45:35.225732",
+      "raw_text": "Patient reports headaches for 2 weeks, worse in the evening. Plan: hydrate, improve sleep, limit caffeine. Follow up in 2 weeks or sooner if symptoms worsen.",
+      "summary": "The patient has been experiencing headaches for the past two weeks, which seem to be more severe in the evening. The healthcare provider suggests improving hydration, sleep quality, and limiting caffeine intake as potential remedies. A follow-up appointment is scheduled within two weeks, or sooner if symptoms worsen.",
+      "visit_type": "doctor"
+    },
+    {
+      "timestamp": "2026-01-12T17:47:31.563614",
+      "raw_text": "Therapy session notes: patient felt stressed due to deadlines, practiced breathing and reported mild improvement. Homework: 10 minutes daily mindfulness.",
+      "summary": "The patient attended a therapy session where they discussed feeling stressed due to deadlines. The doctor helped the patient practice breathing exercises, and the patient reported mild improvement. The doctor assigned homework for the patient to practice mindfulness for 10 minutes daily at home.",
+      "visit_type": "therapist"
+    }
+  ],
+  "mood_logs": [],
+  "emotion_analysis": [
+    {
+      "timestamp": "2026-01-12T17:55:27.300327",
+      "text": "Today felt normal. Nothing special happened.",
+      "sentiment": "neutral",
+      "emotional_categories": [
+        "normality"
+      ],
+      "suggested_reflection": "Even if today didn't bring any extraordinary events, remember to appreciate the simplicity and routine of a 'normal' day.",
+      "safety_flag": "none",
+      "source": "llm"
+    },
+    {
+      "timestamp": "2026-01-12T17:56:30.025221",
+      "text": "I felt overwhelmed today and kept worrying about making mistakes.",
+      "sentiment": "negative",
+      "emotional_categories": [
+        "anxiety",
+        "stress"
+      ],
+      "suggested_reflection": "It's okay to feel overwhelmed sometimes. Remember, it's normal to make mistakes and learning from them can help you grow.",
+      "safety_flag": "concerning",
+      "source": "llm"
+    },
+    {
+      "timestamp": "2026-01-12T17:57:56.397620",
+      "text": "I feel like I can't go on and I want to end my life.",
+      "sentiment": "negative",
+      "emotional_categories": [
+        "sadness",
+        "despair"
+      ],
+      "suggested_reflection": "It's okay to feel overwhelmed, but remember that there are people who care about you and want to help. Reach out to someone you trust or call a helpline if you need immediate support.",
+      "safety_flag": "urgent",
+      "source": "llm"
+    }
+  ],
+  "mental_health_summaries": [
+    {
+      "timestamp": "2026-01-12T18:00:25.482082",
+      "date": "2026-01-12",
+      "summary": "The day showed mixed emotions, with a predominantly normal mood but also instances of feeling overwhelmed and stressed. There was also an expression of deep sadness.",
+      "key_emotional_patterns": [
+        "normal",
+        "overwhelmed",
+        "sad"
+      ],
+      "stress_triggers": [
+        "worry about making mistakes"
+      ],
+      "recommended_actions": [
+        "Take a break when feeling overwhelmed to regain focus and perspective.",
+        "Consider reaching out to a trusted friend or family member for support.",
+        "Engage in activities that bring joy and help alleviate feelings of sadness."
+      ],
+      "safety_flag": "urgent",
+      "source": "llm"
+    }
+  ],
+  "mental_health_insights": [
+    {
+      "timestamp": "2026-01-12T18:00:25.482082",
+      "date": "2026-01-12",
+      "summary": "The day showed mixed emotions, with a predominantly normal mood but also instances of feeling overwhelmed and stressed. There was also an expression of deep sadness.",
+      "key_emotional_patterns": [
+        "normal",
+        "overwhelmed",
+        "sad"
+      ],
+      "stress_triggers": [
+        "worry about making mistakes"
+      ],
+      "recommended_actions": [
+        "Take a break when feeling overwhelmed to regain focus and perspective.",
+        "Consider reaching out to a trusted friend or family member for support.",
+        "Engage in activities that bring joy and help alleviate feelings of sadness."
+      ],
+      "safety_flag": "urgent",
+      "source": "llm"
+    }
+  ],
+  "coherence_recommendations": [
+    {
+      "timestamp": "2026-01-12T18:05:37.793071",
+      "goal": "sleep",
+      "breathing_exercise": "4-7-8 breathing: inhale 4s, hold 7s, exhale 8s — repeat 4 cycles.",
+      "audio_suggestion": "Low-volume nature soundscape (rain/ocean) for 5–10 minutes.",
+      "grounding_exercise": "5-4-3-2-1 grounding: name 5 things you see, 4 feel, 3 hear, 2 smell, 1 taste.",
+      "light_routine": "Dim lights 30–60 minutes before sleep; avoid bright screens if possible.",
+      "rationale": "Based on your recent mood and wearable signals.",
+      "safety_flag": "urgent",
+      "source": "heuristic"
+    }
+  ],
+  "logs": [
+    {
+      "timestamp": "2026-01-12T17:45:35.957885",
+      "response_type": "note_summary",
+      "content": "The patient has been experiencing headaches for the past two weeks, which seem to be more severe in the evening. The healthcare provider suggests improving hydration, sleep quality, and limiting caffeine intake as potential remedies. A follow-up appointment is scheduled within two weeks, or sooner if symptoms worsen.",
+      "source": "summarize-doctor-note"
+    },
+    {
+      "timestamp": "2026-01-12T17:47:31.760900",
+      "response_type": "note_summary",
+      "content": "The patient attended a therapy session where they discussed feeling stressed due to deadlines. The doctor helped the patient practice breathing exercises, and the patient reported mild improvement. The doctor assigned homework for the patient to practice mindfulness for 10 minutes daily at home.",
+      "source": "summarize-doctor-note"
+    },
+    {
+      "timestamp": "2026-01-12T17:50:05.957924",
+      "response_type": "followup_questions",
+      "content": "1. \"What could be the potential causes for my elevated fasting glucose levels?\"\n2. \"Are there any lifestyle changes I should consider to lower my fasting glucose levels?\"\n3. \"My LDL is elevated, what are the implications and possible treatment options?\"\n4. \"Could my medications be contributing to these lab results? If so, are there alternatives?\"\n5. \"What is the ideal target range for both fasting glucose and LDL levels?\"\n6. \"Are there any additional tests needed to further understand these findings?\"\n7. \"Is it necessary to monitor these levels more frequently?\"\n8. \"Could stress or other factors be impacting my blood sugar and cholesterol levels?\"\n9. \"What are the long-term effects of having elevated fasting glucose and LDL levels?\"\n10. \"Are there any supplements or dietary changes that could help manage these conditions?\"",
+      "source": "suggest-followup"
+    },
+    {
+      "timestamp": "2026-01-12T17:53:38.208442",
+      "response_type": "ask_answer",
+      "content": "Improving LDL (bad) cholesterol levels involves adopting a heart-healthy lifestyle. Here are some effective steps:\n\n1. Diet: Follow a low-saturated-fat, low-cholesterol diet rich in fruits, vegetables, whole grains, lean proteins, and healthy fats like omega-3 fatty acids. Limit intake of trans fats, saturated fats, and dietary cholesterol.\n\n2. Exercise: Regular physical activity can help raise HDL (good) cholesterol while lowering LDL cholesterol levels. Aim for at least 30 minutes of moderate-intensity exercise most days of the week.\n\n3. Weight management: Maintaining a healthy weight is crucial, as excess pounds contribute to higher LDL cholesterol levels. If overweight or obese, work with your healthcare provider to develop a safe and effective weight loss plan.\n\n4. Quit smoking: Smoking can raise LDL cholesterol and lower HDL cholesterol, increasing the risk of heart disease. Quitting smoking is essential for improving cholesterol levels",
+      "source": "ask:What are lifestyle steps that can help improve LDL cholesterol?"
+    },
+    {
+      "timestamp": "2026-01-12T17:55:27.906627",
+      "response_type": "mental_analysis",
+      "content": "neutral | normality",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2026-01-12T17:55:27.907137",
+      "response_type": "mental_analysis",
+      "content": "neutral",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2026-01-12T17:56:30.040244",
+      "response_type": "mental_analysis",
+      "content": "negative | anxiety, stress",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2026-01-12T17:56:30.208524",
+      "response_type": "mental_analysis",
+      "content": "negative",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2026-01-12T17:57:56.420199",
+      "response_type": "mental_analysis",
+      "content": "negative | sadness, despair",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2026-01-12T17:57:56.445401",
+      "response_type": "mental_analysis",
+      "content": "negative",
+      "source": "/analyze-mood"
+    },
+    {
+      "timestamp": "2026-01-12T18:00:25.540582",
+      "response_type": "mental_daily_summary",
+      "content": "The day showed mixed emotions, with a predominantly normal mood but also instances of feeling overwhelmed and stressed. There was also an expression of deep sadness.",
+      "source": "/daily-mental-summary"
+    },
+    {
+      "timestamp": "2026-01-12T18:00:25.555581",
+      "response_type": "mental_daily_summary",
+      "content": "The day showed mixed emotions, with a predominantly normal mood but also instances of feeling overwhelmed and stressed. There was also an expression of deep sadness.",
+      "source": "/daily-mental-summary"
+    },
+    {
+      "timestamp": "2026-01-12T18:05:37.798405",
+      "response_type": "mental_recommendation",
+      "content": "Based on your recent mood and wearable signals.",
+      "source": "/recommend-relaxation"
+    },
+    {
+      "timestamp": "2026-01-12T18:05:37.831948",
+      "response_type": "mental_recommendation",
+      "content": "Based on your recent mood and wearable signals.",
+      "source": "/recommend-relaxation"
+    },
+    {
+      "timestamp": "2026-01-12T18:10:02.053997",
+      "response_type": "summary",
+      "content": "The report is a Complete Blood Count (CBC) for patient Amina H. (ID: CC-104233, DOB: 1996-03-18, Sex: F). The test was conducted on 2025-12-20 and ordered by Dr. K. Schneider.\n\nThe results are as follows:\n- White Blood Cell Count (WBC): 7.2 x10^9/L (within normal range)\n- Red Blood Cell Count (RBC): 4.48 x10^12/L (slightly below the reference range)\n- Hemoglobin: 11.2 g/dL (slightly below the reference range)\n- Hematocrit: 34.6 % (slightly below the reference range)\n- Platelets: 265 x10^9/L (within normal range)\n- Mean Corpuscular Volume (MCV): 77.2 fL (indicates microcytic anemia, slightly below the reference range)\n\nThe report suggests a mild micro",
+      "source": "upload:dummy_lab_report_1.pdf|type:lab_report"
+    }
+  ]
+}
